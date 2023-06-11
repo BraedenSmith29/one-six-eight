@@ -1,17 +1,9 @@
 <script>
-
-  let task = {
-    name: "Example Task",
-    description: "lorem ipsum dolor sit amet",
-    complete: false,
-    dueDate: "2023-6-11",
-    projectId: 1
-  }
-
+  import TaskListItem from "$lib/components/tasks/TaskListItem.svelte";
 </script>
 
 <div class="content">
-  <p>test</p>
+  <TaskListItem />
 </div>
 
 <style>
