@@ -1,11 +1,15 @@
 <script>
+  import { createEventDispatcher } from "svelte";
+
+  let dispatch = createEventDispatcher();
+
   export let showModal = false;
 </script>
 
 {#if showModal}
   <!-- TODO: Fix this -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <div class="backdrop" on:click|self={() => showModal = false}>
+  <div class="backdrop" on:click|self={() => dispatch("exit")}>
     <div class="modal">
       <slot />
     </div>
