@@ -29,7 +29,6 @@
   .task-list-item {
     background-color: rgb(198, 198, 198);
     padding: 10px;
-    margin-bottom: 10px;
   }
   .task-name {
     font-size: 1.25em;

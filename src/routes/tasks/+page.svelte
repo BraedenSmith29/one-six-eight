@@ -15,6 +15,7 @@
   {#each incompleteTasks as task}
     <TaskListItem task={task} />
   {/each}
+  <button class="add-task-button" on:click={toggleModal}>Add Task</button>
   {#each completeTasks as task}
     <TaskListItem task={task} />
   {/each}
@@ -22,7 +23,14 @@
 
 <style>
   .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
     width: 50%;
     margin: auto;
+  }
+  .add-task-button {
+    width: 20%;
   }
 </style>
