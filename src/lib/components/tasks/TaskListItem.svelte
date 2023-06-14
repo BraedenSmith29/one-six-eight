@@ -1,11 +1,5 @@
 <script>
-  let task = {
-    name: "Example Task",
-    description: "lorem ipsum dolor sit amet",
-    complete: false,
-    dueDate: "2023-6-11",
-    projectId: 1
-  }
+  export let task;
 </script>
 
 <div class="task-list-item">
@@ -19,8 +13,9 @@
 
 <style>
   .task-list-item {
-    background-color: azure;
+    background-color: rgb(198, 198, 198);
     padding: 10px;
+    margin-bottom: 10px;
   }
   .task-name {
     font-size: 1.25em;
