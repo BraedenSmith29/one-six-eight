@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 
 const TaskStore = writable([
   {
-    taskId: 1,
+    id: 1,
     name: "Example Task",
     description: "lorem ipsum dolor sit amet",
     complete: false,
@@ -10,7 +10,7 @@ const TaskStore = writable([
     projectId: 1
   },
   {
-    taskId: 2,
+    id: 2,
     name: "Another Example Task",
     description: "lorem ipsum dolor sit amet",
     complete: false,
