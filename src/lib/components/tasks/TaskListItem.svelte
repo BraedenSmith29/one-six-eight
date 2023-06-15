@@ -1,7 +1,13 @@
 <script>
   import TaskStore from "$lib/stores/taskStore.js";
+  import ProjectStore from "$lib/stores/projectStore.js";
 
   export let task;
+
+  let project;
+  ProjectStore.subscribe(projects => {
+    project = projects.find(p => p.id === task.projectId);
+  });
 
   const toggleCompletion = () => {
     // Toggle the state of the checkbox
@@ -16,7 +22,7 @@
   }
 </script>
 
-<div class="task-list-item">
+<div class="task-list-item" style="background-color: {project.color}">
   <label>
     <input class="task-completed" type="checkbox" bind:checked={task.complete} on:click={toggleCompletion}>
     <span class="task-name">{task.name}</span>
@@ -27,7 +33,6 @@
 
 <style>
   .task-list-item {
-    background-color: rgb(198, 198, 198);
     padding: 10px;
   }
   .task-name {
