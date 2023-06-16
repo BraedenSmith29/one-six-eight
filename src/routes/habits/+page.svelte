@@ -1,8 +1,9 @@
 <script>
-
+  import HabitListItem from "$lib/components/habits/HabitListItem.svelte";
 </script>
 
 <div class="content">
+  <HabitListItem />
   <button class="add-habit-button">Add Habit</button>
 </div>
 
