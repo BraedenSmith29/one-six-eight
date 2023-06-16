@@ -1,13 +1,7 @@
 <script>
   import { getLastSevenDays, convertDateFormat } from "$lib/shared/dateHelper.js";
   
-  export let habit = {
-    id: 1,
-    name: "Habit 1",
-    type: "boolean",
-    color: "#c6c6c6",
-    habitHistory: ["2023-06-15", "2023-06-14", "2023-06-12", "2023-06-10"],
-  };
+  export let habit;
   
   // By default, let history window be the last seven days and pre-load it with completion status based on habit history
   let historyWindow = getLastSevenDays().map(date => ({ date, completed: habit.habitHistory.includes(date) }));
