@@ -1,29 +1,57 @@
 <script>
   import HabitListItem from "$lib/components/habits/HabitListItem.svelte";
+  import Modal from "$lib/components/shared/Modal.svelte";
 
-  let habitList = [
-    {
-      id: 1,
-      name: "Habit 1",
+  import HabitStore from "$lib/stores/habitStore.js";
+
+  let showModal = false;
+  const toggleModal = () => {
+    // Clear the fields and toggle the modal
+    addHabitFields = {
+      name: "",
       color: "#c6c6c6",
-      habitHistory: ["2023-06-15", "2023-06-14", "2023-06-12", "2023-06-10"],
-    },
-    {
-      id: 2,
-      name: "Habit 2",
-      color: "#a0a0a0",
-      habitHistory: ["2023-06-15", "2023-06-14", "2023-06-12", "2023-06-10"],
-    },
-  ]
+    };
+    showModal = !showModal
+  };
 
+  let addHabitFields = {
+    name: "",
+    color: "#c6c6c6",
+  };
+  const addHabit = () => {
+    HabitStore.update(habits => {
+      let newHabit = {
+        id: Math.max(...habits.map(h => h.id)) + 1,
+        name: addHabitFields.name,
+        color: addHabitFields.color,
+        habitHistory: [],
+      }
+      habits = [...habits, newHabit];
+      return habits;
+    });
+    toggleModal();
+  };
 </script>
 
 <div class="content">
-  {#each habitList as habit}
+  {#each $HabitStore as habit}
     <HabitListItem habit={habit} />  
   {/each}
-  <button class="add-habit-button">Add Habit</button>
+  <button class="add-habit-button" on:click={toggleModal}>Add Habit</button>
 </div>
+<Modal showModal={showModal} on:exit={toggleModal}>
+  <div class="add-habit-modal">
+    <label>
+      <span>Habit Name: </span>
+      <input type="textbox" bind:value={addHabitFields.name}>
+    </label>
+    <label>
+      <span>Habit Color: </span>
+      <input type="color" bind:value={addHabitFields.color}>
+    </label>
+    <button on:click={addHabit}>Add Task</button>
+  </div>
+</Modal>
 
 <style>
   .content {
@@ -36,5 +64,12 @@
   }
   .add-habit-button {
     width: 20%;
+  }
+  .add-habit-button {
+    width: 20%;
+  }
+  .add-habit-modal label {
+    display: block;
+    margin: 5px 0px;
   }
 </style>
