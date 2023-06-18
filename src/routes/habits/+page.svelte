@@ -49,7 +49,7 @@
       <span>Habit Color: </span>
       <input type="color" bind:value={addHabitFields.color}>
     </label>
-    <button on:click={addHabit}>Add Task</button>
+    <button on:click={addHabit}>Add Habit</button>
   </div>
 </Modal>
 
