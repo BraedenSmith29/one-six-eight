@@ -1,10 +1,27 @@
 <script>
   import { getLastSevenDays, convertDateFormat } from "$lib/shared/dateHelper.js";
+  import HabitStore from "$lib/stores/habitStore.js";
   
-  export let habit;
+  export let habitId;
+
+  // Reactively get this component's habit from the store
+  $: habit = $HabitStore.find(h => h.id === habitId);
   
-  // By default, let history window be the last seven days and pre-load it with completion status based on habit history
-  let historyWindow = getLastSevenDays().map(date => ({ date, completed: habit.habitHistory.includes(date) }));
+  // Reactively define historyWindow as an array of objects with the date and completion status for that date
+  $: historyWindow = getLastSevenDays().map(date => ({ date, completed: habit.habitHistory.includes(date) }));
+
+  const updateHistory = (day) => {
+    // Logic is sorta backwards
+    if (!day.completed) {
+      // If the day currently IS NOT completed, then it needs to be ADDED to the list
+      habit.habitHistory = [...habit.habitHistory, day.date];
+    } else {
+      // If the day currently IS completed, then it needs to be REMOVED from the list
+      habit.habitHistory = habit.habitHistory.filter(d => d !== day.date);
+    }
+    // Push the update to the store
+    $HabitStore = $HabitStore;
+  };
 </script>
 
 <div class="habit-list-item" style="background-color: {habit.color};">
@@ -12,7 +29,7 @@
   {#each historyWindow as day}
     <div>
       <div>{convertDateFormat(day.date)}</div>
-      <input type="checkbox" bind:checked={day.completed}>
+      <input type="checkbox" checked={day.completed} on:change={() => updateHistory(day)}>
     </div>
   {/each}
 </div>

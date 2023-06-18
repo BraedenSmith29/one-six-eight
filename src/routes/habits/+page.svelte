@@ -35,7 +35,7 @@
 
 <div class="content">
   {#each $HabitStore as habit}
-    <HabitListItem habit={habit} />  
+    <HabitListItem habitId={habit.id} />  
   {/each}
   <button class="add-habit-button" on:click={toggleModal}>Add Habit</button>
 </div>
