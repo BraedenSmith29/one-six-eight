@@ -1,19 +1,15 @@
 <script>
+  // Components
   import TaskListItem from "$lib/components/tasks/TaskListItem.svelte";
   import Modal from "$lib/components/shared/Modal.svelte";
 
-  import TaskStore from "$lib/stores/taskStore.js";
-  import ProjectStore from "$lib/stores/projectStore.js";
+  // Stores
+  import taskStore from "$lib/stores/taskStore.js";
+  import projectStore from "$lib/stores/projectStore.js";
 
-  let completeTasks = [];
-  let incompleteTasks = [];
-  let projects = [];
-
-  TaskStore.subscribe(tasks => {
-    completeTasks = tasks.filter(task => task.complete === true);
-    incompleteTasks = tasks.filter(task => task.complete === false);
-  });
-  ProjectStore.subscribe(storedProjects => projects = storedProjects);
+  // Reactively define the subsets of tasks
+  $: completeTasks = $taskStore.filter(task => task.complete === true);
+  $: incompleteTasks = $taskStore.filter(task => task.complete === false);
 
   let showModal = false;
   const toggleModal = () => {
@@ -23,7 +19,7 @@
       description: "",
       dueDate: "",
       projectId: 1,
-      projectColor: projects.find(p => p.id === 1).color,
+      projectColor: $projectStore.find(p => p.id === 1).color,
     };
     showModal = !showModal
   };
@@ -33,12 +29,12 @@
     description: "",
     dueDate: "",
     projectId: 1,
-    projectColor: projects.find(p => p.id === 1).color,
+    projectColor: $projectStore.find(p => p.id === 1).color,
   }
   const addTask = () => {
-    if (projects.find(p => p.id === addTaskFields.projectId) == null) {
+    if ($projectStore.find(p => p.id === addTaskFields.projectId) == null) {
       // If cannot find project with this id, add a new one
-      ProjectStore.update(storedProjects => {
+      projectStore.update(storedProjects => {
         let newProject = {
           id: addTaskFields.projectId,
           name: "Project " + addTaskFields.projectId,
@@ -48,14 +44,14 @@
       });
     } else {
       // If we do have this project, just update the color
-      ProjectStore.update(storedProjects => {
+      projectStore.update(storedProjects => {
         let project = storedProjects.find(p => p.id === addTaskFields.projectId);
         project.color = addTaskFields.projectColor;
         return storedProjects;
       });
     }
     // Add the task
-    TaskStore.update(tasks => {
+    taskStore.update(tasks => {
       let newTask = {
         // Get the next highest id
         id: Math.max(...tasks.map(o => o.id)) + 1,
@@ -72,7 +68,7 @@
   }
 
   const changeProject = () => {
-    let selectedProject = projects.find(p => p.id === addTaskFields.projectId);
+    let selectedProject = $projectStore.find(p => p.id === addTaskFields.projectId);
     addTaskFields.projectColor = selectedProject != null ? selectedProject.color : "#c6c6c6";
   }
 </script>

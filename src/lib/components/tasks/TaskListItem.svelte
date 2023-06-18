@@ -1,30 +1,24 @@
 <script>
-  import TaskStore from "$lib/stores/taskStore.js";
-  import ProjectStore from "$lib/stores/projectStore.js";
+  // Stores
+  import taskStore from "$lib/stores/taskStore.js";
+  import projectStore from "$lib/stores/projectStore.js";
 
+  // Properties
   export let task;
 
-  let project;
-  ProjectStore.subscribe(projects => {
-    project = projects.find(p => p.id === task.projectId);
-  });
+  $: project = $projectStore.find(p => p.id === task.projectId);
 
   const toggleCompletion = () => {
     // Toggle the state of the checkbox
     task.complete = !task.complete;
-    // Update the store with the new state
-    TaskStore.update(tasks => {
-      // Find the current task in the array and update it, then return the new array
-      let changedTask = tasks.find(t => t.id === task.id);
-      changedTask.complete = task.complete;
-      return tasks;
-    });
+    // Push the update to the store
+    $taskStore = $taskStore;
   }
 </script>
 
 <div class="task-list-item" style="background-color: {project.color}">
   <label>
-    <input class="task-completed" type="checkbox" bind:checked={task.complete} on:click={toggleCompletion}>
+    <input class="task-completed" type="checkbox" checked={task.complete} on:change={toggleCompletion}>
     <span class="task-name">{task.name}</span>
   </label>
   <p class="task-description">{task.description}</p>

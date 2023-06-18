@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-const ProjectStore = writable([
+const projectStore = writable([
   {
     id: 1,
     name: "Project 1",
@@ -8,4 +8,4 @@ const ProjectStore = writable([
   },
 ]);
 
-export default ProjectStore;
+export default projectStore;

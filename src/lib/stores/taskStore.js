@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-const TaskStore = writable([
+const taskStore = writable([
   {
     id: 1,
     name: "Example Task",
@@ -19,4 +19,4 @@ const TaskStore = writable([
   },
 ]);
 
-export default TaskStore;
+export default taskStore;
