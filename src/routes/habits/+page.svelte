@@ -6,6 +6,8 @@
   // Stores
   import habitStore from "$lib/stores/habitStore.js";
 
+  // Add functionality and form contents variable for modal
+  let addHabitFields;
   let showModal = false;
   const toggleModal = () => {
     // Clear the fields and toggle the modal
@@ -16,10 +18,6 @@
     showModal = !showModal
   };
 
-  let addHabitFields = {
-    name: "",
-    color: "#c6c6c6",
-  };
   const addHabit = () => {
     habitStore.update(habits => {
       let newHabit = {

@@ -11,6 +11,8 @@
   $: completeTasks = $taskStore.filter(task => task.complete === true);
   $: incompleteTasks = $taskStore.filter(task => task.complete === false);
 
+  // Add functionality and form contents variable for modal
+  let addTaskFields;
   let showModal = false;
   const toggleModal = () => {
     // Clear the fields and toggle the modal
@@ -23,15 +25,13 @@
     };
     showModal = !showModal
   };
-
-  let addTaskFields = {
-    name: "",
-    description: "",
-    dueDate: "",
-    projectId: 1,
-    projectColor: $projectStore.find(p => p.id === 1).color,
+  const modalChangeProjectColor = () => {
+    let selectedProject = $projectStore.find(p => p.id === addTaskFields.projectId);
+    addTaskFields.projectColor = selectedProject != null ? selectedProject.color : "#c6c6c6";
   }
+
   const addTask = () => {
+    // This is pretty placeholder for project management
     if ($projectStore.find(p => p.id === addTaskFields.projectId) == null) {
       // If cannot find project with this id, add a new one
       projectStore.update(storedProjects => {
@@ -66,11 +66,6 @@
     });
     toggleModal();
   }
-
-  const changeProject = () => {
-    let selectedProject = $projectStore.find(p => p.id === addTaskFields.projectId);
-    addTaskFields.projectColor = selectedProject != null ? selectedProject.color : "#c6c6c6";
-  }
 </script>
 
 <div class="content">
@@ -98,7 +93,7 @@
     </label>
     <label>
       <span>Project Id: </span>
-      <input type="number" bind:value={addTaskFields.projectId} on:change={changeProject}>
+      <input type="number" bind:value={addTaskFields.projectId} on:change={modalChangeProjectColor}>
     </label>
     <label>
       <span>Project Color (optional): </span>
