@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-const HabitStore = writable([
+const habitStore = writable([
   {
     id: 1,
     name: "Habit 1",
@@ -15,4 +15,4 @@ const HabitStore = writable([
   },
 ]);
 
-export default HabitStore;
+export default habitStore;

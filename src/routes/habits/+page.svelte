@@ -1,8 +1,10 @@
 <script>
+  // Components
   import HabitListItem from "$lib/components/habits/HabitListItem.svelte";
   import Modal from "$lib/components/shared/Modal.svelte";
 
-  import HabitStore from "$lib/stores/habitStore.js";
+  // Stores
+  import habitStore from "$lib/stores/habitStore.js";
 
   let showModal = false;
   const toggleModal = () => {
@@ -19,7 +21,7 @@
     color: "#c6c6c6",
   };
   const addHabit = () => {
-    HabitStore.update(habits => {
+    habitStore.update(habits => {
       let newHabit = {
         id: Math.max(...habits.map(h => h.id)) + 1,
         name: addHabitFields.name,
@@ -34,8 +36,8 @@
 </script>
 
 <div class="content">
-  {#each $HabitStore as habit}
-    <HabitListItem habitId={habit.id} />  
+  {#each $habitStore as habit}
+    <HabitListItem habit={habit} />  
   {/each}
   <button class="add-habit-button" on:click={toggleModal}>Add Habit</button>
 </div>

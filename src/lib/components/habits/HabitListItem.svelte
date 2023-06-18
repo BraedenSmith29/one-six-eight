@@ -1,11 +1,12 @@
 <script>
+  // Helper functions
   import { getLastSevenDays, convertDateFormat } from "$lib/shared/dateHelper.js";
-  import HabitStore from "$lib/stores/habitStore.js";
   
-  export let habitId;
-
-  // Reactively get this component's habit from the store
-  $: habit = $HabitStore.find(h => h.id === habitId);
+  // Stores
+  import habitStore from "$lib/stores/habitStore.js";
+  
+  // Properties
+  export let habit;
   
   // Reactively define historyWindow as an array of objects with the date and completion status for that date
   $: historyWindow = getLastSevenDays().map(date => ({ date, completed: habit.habitHistory.includes(date) }));
@@ -20,7 +21,7 @@
       habit.habitHistory = habit.habitHistory.filter(d => d !== day.date);
     }
     // Push the update to the store
-    $HabitStore = $HabitStore;
+    $habitStore = $habitStore;
   };
 </script>
 
