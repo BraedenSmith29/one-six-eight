@@ -1,38 +1,33 @@
-# create-svelte
+# One Six Eight
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A small web application designed to help users easily budget their time and become more productive.
 
-## Creating a project
+### 🔥 Problem Statement
 
-If you're seeing this, you've probably already done this step. Congrats!
+---
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+Every week has 168 hours. We work for 40 of those, and sleep for (around) another 50-60. Factor in all of the other random things we have to or want to do and all of a sudden you’re out of time. This is something I struggle with, so how do we fix it? Well, planning, but that takes time in itself. My biggest issue is the amount of time I spend not doing things because I’m so worried about what I need to do, or putting things off because “I’ll do it later”. I won’t. Instead, I want a way to set productivity goals and measure my effectiveness in achieving them, *without* spending hours planning. Enter: One Six Eight. This website (app? idk) will allow users to set their productivity goals and quickly preview how to best meet them in minutes, while holding them accountable with weekly reports.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+### ✅ Planned Features
 
-## Developing
+---
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- Calendar for budgeting time
+- To-do list for planning tasks
+- Habits list for building or breaking habits
+- Weekly reports on goal achievement
+- Focus timers
+- External syncing
+- Reflective notes and journal entries
 
-```bash
-npm run dev
+### 🔄 User Workflow Loop
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+---
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+1. Set goals for how long to spend on things, and when to complete habits
+2. Every week, plan out what to do, for how long, and when
+3. At the end of every day, or throughout, mark how you’ve spent your time
+    1. Alternatively, set a timer when you start something
+    2. Optionally take notes on task productivity
+4. At the end of every week, get reports on how you did on tasks and habits
+5. Reflect on the week in short journal entries
