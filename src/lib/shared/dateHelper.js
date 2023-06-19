@@ -14,7 +14,7 @@ export function convertDateFormat(dateString) {
 
 // Converts from date string to an object containing details of the date
 export function parseDateString(dateString) {
-  let date = new Date(dateString);
+  let date = new Date(dateString + "T00:00"); // Add time to ensure use of local timezone
   
   let dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
   let day = date.getDate();
