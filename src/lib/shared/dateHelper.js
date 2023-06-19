@@ -12,6 +12,25 @@ export function convertDateFormat(dateString) {
   return formattedDate;
 }
 
+// Converts from date string to an object containing details of the date
+export function parseDateString(dateString) {
+  let date = new Date(dateString);
+  
+  let dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
+  let day = date.getDate();
+  let month = date.toLocaleString('en-US', { month: 'long' });
+  let numericalMonth = date.getMonth() + 1; // Adding 1 to get the numerical month
+  let year = date.getFullYear();
+  
+  return {
+    dayOfWeek: dayOfWeek,
+    day: day,
+    month: month,
+    numericalMonth: numericalMonth,
+    year: year
+  };
+}
+
 export function getCurrentDate() {
   let today = new Date();
   let year = today.getFullYear();
