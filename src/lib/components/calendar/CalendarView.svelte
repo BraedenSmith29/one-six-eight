@@ -2,13 +2,19 @@
   // Helper functions
   import { getArrayOfDays, getCurrentDate, parseDateString } from "$lib/shared/dateHelper.js";
 
-  let dateWindow = getArrayOfDays(7, 2).map(d => parseDateString(d));
+  let dayOffset = 2;
+
+  $: dateWindow = getArrayOfDays(7, dayOffset).map(d => parseDateString(d));
+
+  const shiftDateWindowRight = (amount) => {
+    dayOffset -= amount;
+  }
 </script>
 
 <div class="controls-header">
-  <button>&lt;</button>
+  <button on:click={() => shiftDateWindowRight(-7)}>&lt;</button>
   <h1 style="display: inline;">June 2023</h1>
-  <button>&gt;</button>
+  <button on:click={() => shiftDateWindowRight(7)}>&gt;</button>
 </div>
 <div class="day-header-wrapper">
   {#each dateWindow as date}
