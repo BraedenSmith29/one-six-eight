@@ -60,7 +60,7 @@
     justify-content: space-between;
     gap: 10px;
     width: 50%;
-    margin: auto;
+    margin: 10px auto;
   }
   .add-habit-button {
     width: 20%;

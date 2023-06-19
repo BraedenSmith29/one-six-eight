@@ -14,9 +14,7 @@
     <img class="profile-picture" alt="Profile" src={profilePicture} />
   </div>
 </div>
-<div class="contents">
-  <slot />
-</div>
+<slot />
 
 <style>
   .site-header {
@@ -44,8 +42,5 @@
   }
   .profile-picture {
     height: 50px;
-  }
-  .contents {
-    margin: 10px;
   }
 </style>
