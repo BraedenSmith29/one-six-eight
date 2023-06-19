@@ -30,11 +30,9 @@
     padding: 10px;
     width: 216px;
     border-right: 2px solid grey;
-    height: calc(100vh - 72px);
   }
   .sidebar-header {
     font-size: 1.5em;
     font-weight: bold;
-    position: relative;
   }
 </style>

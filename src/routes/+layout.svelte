@@ -2,22 +2,31 @@
   import profilePicture from "$lib/assets/profile-temp.png";
 </script>
 
-<div class="site-header">
-  <div class="header-group">
-    <span class="site-title">One Six Eight</span>
-    <a href="/calendar">Calendar</a>
-    <a href="/tasks">Tasks</a>
-    <a href="/habits">Habits</a>
-  </div>
-  <div class="header-group">
-    <a href="/insights">Insights</a>
-    <img class="profile-picture" alt="Profile" src={profilePicture} />
-  </div>
+<div class="page-wrapper">
+  <header>
+    <div class="header-group">
+      <span class="site-title">One Six Eight</span>
+      <a href="/calendar">Calendar</a>
+      <a href="/tasks">Tasks</a>
+      <a href="/habits">Habits</a>
+    </div>
+    <div class="header-group">
+      <a href="/insights">Insights</a>
+      <img class="profile-picture" alt="Profile" src={profilePicture} />
+    </div>
+  </header>
+  <main>
+    <slot />
+  </main>
 </div>
-<slot />
 
 <style>
-  .site-header {
+  .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,7 +39,7 @@
     align-items: center;
     gap: 25px;
   }
-  .site-header a {
+  header a {
     font-size: 1.25em;
   }
   .site-title {
@@ -42,5 +51,8 @@
   }
   .profile-picture {
     height: 50px;
+  }
+  main {
+    flex: 1;
   }
 </style>
