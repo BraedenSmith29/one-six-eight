@@ -27,7 +27,8 @@ export function parseDateString(dateString) {
     day: day,
     month: month,
     numericalMonth: numericalMonth,
-    year: year
+    year: year,
+    dateString: dateString
   };
 }
 
