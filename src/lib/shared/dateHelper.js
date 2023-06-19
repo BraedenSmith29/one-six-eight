@@ -12,22 +12,25 @@ export function convertDateFormat(dateString) {
   return formattedDate;
 }
 
-// Returns the last seven days in descending order in YYYY-MM-DD format
-export function getLastSevenDays() {
-  const today = new Date();
-  const lastSevenDays = [];
+// Returns an array of dayCount days in YYYY-MM-DD format where index is the index of today
+export function getArrayOfDays(dayCount, index = 0) {
+  let dates = [];
+  let firstDay = new Date();
+  firstDay.setDate(firstDay.getDate() - index);
 
-  for (let i = 0; i < 7; i++) {
-    const day = new Date(today);
-    day.setDate(today.getDate() - i);
-
-    const year = day.getFullYear();
-    const month = String(day.getMonth() + 1).padStart(2, '0');
-    const date = String(day.getDate()).padStart(2, '0');
-
-    const formattedDate = `${year}-${month}-${date}`;
-    lastSevenDays.push(formattedDate);
+  for (let i = 0; i < dayCount; i++) {
+    let nextDay = new Date(firstDay.getTime() + i * 24 * 60 * 60 * 1000);
+    let year = nextDay.getFullYear();
+    let month = String(nextDay.getMonth() + 1).padStart(2, '0');
+    let day = String(nextDay.getDate()).padStart(2, '0');
+    let formattedDate = year + '-' + month + '-' + day;
+    dates.push(formattedDate);
   }
 
-  return lastSevenDays;
+  return dates;
+}
+
+// Returns the last seven days in descending order in YYYY-MM-DD format
+export function getLastSevenDays() {
+  return getArrayOfDays(7, 6).reverse();
 }
