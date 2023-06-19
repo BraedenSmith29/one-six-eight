@@ -12,6 +12,14 @@ export function convertDateFormat(dateString) {
   return formattedDate;
 }
 
+export function getCurrentDate() {
+  let today = new Date();
+  let year = today.getFullYear();
+  let month = String(today.getMonth() + 1).padStart(2, '0');
+  let day = String(today.getDate()).padStart(2, '0');
+  return year + '-' + month + '-' + day;
+}
+
 // Returns an array of dayCount days in YYYY-MM-DD format where index is the index of today
 export function getArrayOfDays(dayCount, index = 0) {
   let dates = [];
