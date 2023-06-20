@@ -1,10 +1,19 @@
 <script>
   // Helper functions
-  import { getArrayOfDays, getCurrentDate, parseDateString } from "$lib/shared/dateHelper.js";
+  import { getArrayOfDays, getCurrentDate, parseDateString, eventOnDay } from "$lib/shared/dateHelper.js";
+
+  // Components
+  import CalendarEvent from "./CalendarEvent.svelte";
+
+  // Stores
+  import eventStore from "$lib/stores/eventStore.js";
 
   let dayOffset = 2;
 
-  $: dateWindow = getArrayOfDays(7, dayOffset).map(d => parseDateString(d));
+  $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
+    details: parseDateString(d), 
+    events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d))
+  }));
 
   const shiftDateWindowRight = (amount) => {
     dayOffset -= amount;
@@ -19,9 +28,9 @@
 <div class="day-header-wrapper">
   {#each dateWindow as date}
     <div class="day-header">
-      <div class="date" class:current-date={getCurrentDate() === date.dateString}>
-        <div>{date.dayOfWeek.substring(0, 3)}</div>
-        <div style="font-size: 1.5em">{date.day}</div>
+      <div class="date" class:current-date={getCurrentDate() === date.details.dateString}>
+        <div>{date.details.dayOfWeek.substring(0, 3)}</div>
+        <div style="font-size: 1.5em">{date.details.day}</div>
       </div>
     </div>
   {/each}
@@ -29,7 +38,9 @@
 <div class="contents">
   {#each dateWindow as date}
     <div class="day-column">
-      <!-- <div style="background-color: black; height: calc(3 * 4.167%); width:95%; position: relative; top: calc(3 * 4.167%)"></div> -->
+      {#each date.events as event}
+        <CalendarEvent eventId={event.id} />
+      {/each}
     </div>
   {/each}
 </div>
