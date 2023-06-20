@@ -3,16 +3,19 @@
   import { getArrayOfDays, getCurrentDate, parseDateString, eventOnDay } from "$lib/shared/dateHelper.js";
 
   // Components
-  import CalendarEvent from "./CalendarEvent.svelte";
+  import CalendarEvent from "$lib/components/calendar/CalendarEvent.svelte";
+  import CalendarTaskItem from "$lib/components/calendar/CalendarTaskItem.svelte";
 
   // Stores
   import eventStore from "$lib/stores/eventStore.js";
+  import taskStore from "$lib/stores/taskStore.js";
 
   let dayOffset = 2;
 
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
-    events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d))
+    events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d)),
+    tasks: $taskStore.filter(t => t.dueDate === d)
   }));
 
   const shiftDateWindowRight = (amount) => {
@@ -32,6 +35,9 @@
         <div>{date.details.dayOfWeek.substring(0, 3)}</div>
         <div style="font-size: 1.5em">{date.details.day}</div>
       </div>
+      {#each date.tasks as task}
+        <CalendarTaskItem task={task} />
+      {/each}
     </div>
   {/each}
 </div>
@@ -59,10 +65,16 @@
     display: flex;
     border-bottom: 1px solid grey;
     margin: 10px 0 0;
-    padding-bottom: 20px;
+    padding-bottom: 5px;
+    height: 9%;
+    resize: vertical;
+    overflow-y: hidden;
   }
   .day-header {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
   .date {
     width: fit-content;
