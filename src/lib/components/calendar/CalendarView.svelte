@@ -9,8 +9,6 @@
   // Stores
   import eventStore from "$lib/stores/eventStore.js";
   import taskStore from "$lib/stores/taskStore.js";
-  import habitStore from "$lib/stores/habitStore.js";
-    import CalendarHabitItem from "./CalendarHabitItem.svelte";
 
   let dayOffset = 2;
 
@@ -39,9 +37,6 @@
       </div>
       {#each date.tasks as task}
         <CalendarTaskItem task={task} />
-      {/each}
-      {#each $habitStore as habit}
-        <CalendarHabitItem habit={habit} date={date.details.dateString} />
       {/each}
     </div>
   {/each}
