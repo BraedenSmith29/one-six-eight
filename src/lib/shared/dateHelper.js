@@ -62,3 +62,25 @@ export function getArrayOfDays(dayCount, index = 0) {
 export function getLastSevenDays() {
   return getArrayOfDays(7, 6).reverse();
 }
+
+// Returns the difference in minutes between 2 times in YYYY-MM-DDTHH:MM format
+export function computeTimeDifference(startTime, endTime) {
+  let start = new Date(startTime);
+  let end = new Date(endTime);
+  
+  let differenceInMilliseconds = end - start;
+  let differenceInMinutes = Math.round(differenceInMilliseconds / (1000 * 60));
+  
+  return differenceInMinutes;
+}
+
+// Returns the amount of minutes since midnight from a time in YYYY-MM-DDTHH:MM format
+export function computeMinutesSinceMidnight(dateTimeString) {
+  let timeParts = dateTimeString.split('T')[1].split(':');
+  let hours = parseInt(timeParts[0]);
+  let minutes = parseInt(timeParts[1]);
+
+  let minutesSinceMidnight = hours * 60 + minutes;
+
+  return minutesSinceMidnight;
+}
