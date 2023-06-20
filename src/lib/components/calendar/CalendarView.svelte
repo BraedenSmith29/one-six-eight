@@ -9,13 +9,15 @@
   // Stores
   import eventStore from "$lib/stores/eventStore.js";
   import taskStore from "$lib/stores/taskStore.js";
+  import habitStore from "$lib/stores/habitStore.js";
+    import CalendarHabitItem from "./CalendarHabitItem.svelte";
 
   let dayOffset = 2;
 
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
     events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d)),
-    tasks: $taskStore.filter(t => t.dueDate === d)
+    tasks: $taskStore.filter(t => t.dueDate === d),
   }));
 
   const shiftDateWindowRight = (amount) => {
@@ -37,6 +39,9 @@
       </div>
       {#each date.tasks as task}
         <CalendarTaskItem task={task} />
+      {/each}
+      {#each $habitStore as habit}
+        <CalendarHabitItem habit={habit} date={date.details.dateString} />
       {/each}
     </div>
   {/each}
