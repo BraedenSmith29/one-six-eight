@@ -29,9 +29,7 @@
 <div class="contents">
   {#each dateWindow as date}
     <div class="day-column">
-      <div style="background-color: black; height: 400px; width:90%; margin: 40px 0;"></div>
-      <div style="background-color: black; height: 400px; width:90%; margin: 40px 0;"></div>
-      <div style="background-color: black; height: 400px; width:90%; margin: 40px 0; border-bottom: solid red 2px"></div>
+      <!-- <div style="background-color: black; height: calc(3 * 4.167%); width:95%; position: relative; top: calc(3 * 4.167%)"></div> -->
     </div>
   {/each}
 </div>
@@ -72,5 +70,9 @@
   }
   .day-column {
     flex: 1;
+    min-height: 12in;
+    border-right: 1px solid grey;
+    background-size: 100% 4.167%;
+    background-image: linear-gradient(to bottom, grey 1px, transparent 1px);
   }
 </style>
