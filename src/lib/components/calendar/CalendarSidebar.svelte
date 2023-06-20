@@ -1,8 +1,7 @@
 <script>
   // Stores
   import projectStore from "$lib/stores/projectStore.js";
-
-  let calendars = ["Cal 1", "Cal 2"];
+  import calendarStore from "$lib/stores/calendarStore.js";
 </script>
 
 <div class="sidebar">
@@ -12,15 +11,15 @@
     <button>&gt;</button>
   </div>
   <h2>Calendars</h2>
-  {#each calendars as calendar}
-    <div>
-      <input type="checkbox">{calendar}
+  {#each $calendarStore as calendar}
+    <div style="background-color: {calendar.color};">
+      <input type="checkbox" bind:checked={calendar.showInCalendarView}>{calendar.name}
     </div>
   {/each}
   <h2>Projects</h2>
   {#each $projectStore as project}
     <div style="background-color: {project.color};">
-      <input type="checkbox">{project.name}
+      <input type="checkbox" bind:checked={project.showInCalendarView}>{project.name}
     </div>
   {/each}
 </div>

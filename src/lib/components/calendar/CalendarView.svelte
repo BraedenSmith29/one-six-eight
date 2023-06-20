@@ -9,6 +9,8 @@
   // Stores
   import eventStore from "$lib/stores/eventStore.js";
   import taskStore from "$lib/stores/taskStore.js";
+  import calendarStore from "$lib/stores/calendarStore.js";
+  import projectStore from "$lib/stores/projectStore.js";
 
   let dayOffset = 2;
 
@@ -16,8 +18,8 @@
 
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
-    events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d)),
-    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete)
+    events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d) && $calendarStore.find(c => c.id === e.calendarId).showInCalendarView),
+    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $projectStore.find(p => p.id === t.projectId).showInCalendarView)
   }));
 
   const shiftDateWindowRight = (amount) => {
