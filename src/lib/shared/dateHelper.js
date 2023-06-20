@@ -84,3 +84,17 @@ export function computeMinutesSinceMidnight(dateTimeString) {
 
   return minutesSinceMidnight;
 }
+
+// Returns true if any part of the time range (format YYYY-MM-DDTHH:MM) is on the date (in YYYY-MM-DD)
+export function eventOnDay(startTime, endTime, date) {
+  let startDate = new Date(startTime);
+  let endDate = new Date(endTime);
+  let targetDate = new Date(date + "T00:00");
+
+  // Set the time components of startDate and endDate to 00:00:00
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+
+  // Check if targetDate falls between startDate and endDate (inclusive)
+  return targetDate >= startDate && targetDate <= endDate;
+}
