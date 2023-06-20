@@ -26,5 +26,6 @@
 <style>
   .calendar-task-item {
     padding: 1px;
+    margin-left: 1px;
   }
 </style>

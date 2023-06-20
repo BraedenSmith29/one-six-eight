@@ -31,6 +31,7 @@
   <button on:click={() => shiftDateWindowRight(7)}>&gt;</button>
 </div>
 <div class="day-header-wrapper">
+  <spacer style="width: 63.69px"></spacer>
   {#each dateWindow as date}
     <div class="day-header">
       <div class="date" class:current-date={getCurrentDate() === date.details.dateString}>
@@ -46,8 +47,19 @@
       {/each}
     </div>
   {/each}
+  <spacer style="width: 6px"></spacer>
 </div>
 <div class="contents">
+  <div class="times-column">
+    <div style="height: calc(4.167% - .5em);"></div>
+    {#each ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', 
+            '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM']
+    as time}
+      <div style="height: 4.167%;">{time}</div>
+    {/each}
+  </div>
+  <div class="line-overflow-column">
+  </div>
   {#each dateWindow as date}
     <div class="day-column">
       {#each date.events as event}
@@ -95,10 +107,25 @@
     background-color: azure;
     overflow-y: auto;
   }
+  .times-column {
+    min-height: 12in;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    padding: 0 5px;
+    font-size: 0.75em;
+    border-top: 1px grey solid;
+  }
+  .line-overflow-column {
+    width: 20px;
+    min-height: 12in;
+    background-size: 100% 4.167%;
+    background-image: linear-gradient(to bottom, grey 1px, transparent 1px);
+  }
   .day-column {
     flex: 1;
     min-height: 12in;
-    border-right: 1px solid grey;
+    border-left: 1px solid grey;
     background-size: 100% 4.167%;
     background-image: linear-gradient(to bottom, grey 1px, transparent 1px);
   }
