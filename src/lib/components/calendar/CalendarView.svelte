@@ -12,10 +12,12 @@
 
   let dayOffset = 2;
 
+  let showAllTasks = false;
+
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
     events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d)),
-    tasks: $taskStore.filter(t => t.dueDate === d),
+    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete)
   }));
 
   const shiftDateWindowRight = (amount) => {
@@ -35,8 +37,12 @@
         <div>{date.details.dayOfWeek.substring(0, 3)}</div>
         <div style="font-size: 1.5em">{date.details.day}</div>
       </div>
-      {#each date.tasks as task}
-        <CalendarTaskItem task={task} />
+      {#each date.tasks as task, i}
+        {#if i < 2 || i === 2 && date.tasks.length === 3 || showAllTasks}
+          <CalendarTaskItem task={task} />
+        {:else if i === 2}
+          <button class="expand-task-list" on:click={() => showAllTasks = true}>Show {date.tasks.length - 2} more...</button>
+        {/if}
       {/each}
     </div>
   {/each}
@@ -65,10 +71,8 @@
     display: flex;
     border-bottom: 1px solid grey;
     margin: 10px 0 0;
-    padding-bottom: 5px;
-    height: 9%;
-    resize: vertical;
-    overflow-y: hidden;
+    padding-bottom: 2px;
+    height: fit-content;
   }
   .day-header {
     flex: 1;
