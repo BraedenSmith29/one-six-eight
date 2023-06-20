@@ -6,7 +6,7 @@ const taskStore = writable([
     name: "Example Task",
     description: "lorem ipsum dolor sit amet",
     complete: false,
-    dueDate: "2023-6-11",
+    dueDate: "2023-06-21",
     projectId: 1
   },
   {
@@ -14,7 +14,7 @@ const taskStore = writable([
     name: "Another Example Task",
     description: "lorem ipsum dolor sit amet",
     complete: false,
-    dueDate: "2023-6-11",
+    dueDate: "2023-06-21",
     projectId: 1
   },
 ]);
