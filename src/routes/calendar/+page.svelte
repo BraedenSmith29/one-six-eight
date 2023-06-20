@@ -13,11 +13,10 @@
 <style>
   .calendar-view-wrapper {
     display: flex;
-    height: 100%;
+    height: calc(100vh - 72px);
   }
   .calendar-view {
     flex: 1;
-    height: 100%;
     display: flex;
     flex-direction: column;
   }

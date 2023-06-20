@@ -2,30 +2,21 @@
   import profilePicture from "$lib/assets/profile-temp.png";
 </script>
 
-<div class="page-wrapper">
-  <header>
-    <div class="header-group">
-      <span class="site-title">One Six Eight</span>
-      <a href="/calendar">Calendar</a>
-      <a href="/tasks">Tasks</a>
-      <a href="/habits">Habits</a>
-    </div>
-    <div class="header-group">
-      <a href="/insights">Insights</a>
-      <img class="profile-picture" alt="Profile" src={profilePicture} />
-    </div>
-  </header>
-  <main>
-    <slot />
-  </main>
-</div>
+<header>
+  <div class="header-group">
+    <span class="site-title">One Six Eight</span>
+    <a href="/calendar">Calendar</a>
+    <a href="/tasks">Tasks</a>
+    <a href="/habits">Habits</a>
+  </div>
+  <div class="header-group">
+    <a href="/insights">Insights</a>
+    <img class="profile-picture" alt="Profile" src={profilePicture} />
+  </div>
+</header>
+<slot />
 
 <style>
-  .page-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
   header {
     display: flex;
     justify-content: space-between;
@@ -51,8 +42,5 @@
   }
   .profile-picture {
     height: 50px;
-  }
-  main {
-    flex: 1;
   }
 </style>

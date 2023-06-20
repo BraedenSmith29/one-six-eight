@@ -29,9 +29,9 @@
 <div class="contents">
   {#each dateWindow as date}
     <div class="day-column">
-      <div style="background-color: azure; height: 200px; width: 90%">
-        Example Cal Event
-      </div>
+      <div style="background-color: black; height: 400px; width:90%; margin: 40px 0;"></div>
+      <div style="background-color: black; height: 400px; width:90%; margin: 40px 0;"></div>
+      <div style="background-color: black; height: 400px; width:90%; margin: 40px 0; border-bottom: solid red 2px"></div>
     </div>
   {/each}
 </div>
@@ -67,6 +67,8 @@
   .contents {
     flex: 1;
     display: flex;
+    background-color: azure;
+    overflow-y: auto;
   }
   .day-column {
     flex: 1;
