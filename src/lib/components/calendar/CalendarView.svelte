@@ -64,9 +64,11 @@
   </div>
   {#each dateWindow as date}
     <div class="day-column">
-      {#each date.events as event}
-        <CalendarEvent event={event} date={date.details.dateString} />
-      {/each}
+      <div class="event-wrapper">
+        {#each date.events as event}
+          <CalendarEvent event={event} date={date.details.dateString} />
+        {/each}
+      </div>
     </div>
   {/each}
 </div>
@@ -130,5 +132,10 @@
     border-left: 1px solid grey;
     background-size: 100% 4.167%;
     background-image: linear-gradient(to bottom, grey 1px, transparent 1px);
+  }
+  .event-wrapper {
+    height: 100%;
+    width: 95%;
+    position: relative;
   }
 </style>

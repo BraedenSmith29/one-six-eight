@@ -40,8 +40,9 @@
 
 <style>
   .calendar-event {
-    width: 95%;
-    position: relative;
+    border: 1px solid azure;
+    position: absolute;
+    right: 0px;
   }
   .details-container {
     padding: 5px;
