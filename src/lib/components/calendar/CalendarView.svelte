@@ -65,7 +65,7 @@
   {#each dateWindow as date}
     <div class="day-column">
       {#each date.events as event}
-        <CalendarEvent eventId={event.id} />
+        <CalendarEvent event={event} date={date.details.dateString} />
       {/each}
     </div>
   {/each}

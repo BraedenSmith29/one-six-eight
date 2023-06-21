@@ -75,12 +75,12 @@ export function computeTimeDifference(startTime, endTime) {
 }
 
 // Returns the amount of minutes since midnight from a time in YYYY-MM-DDTHH:MM format
-export function computeMinutesSinceMidnight(dateTimeString) {
-  let timeParts = dateTimeString.split('T')[1].split(':');
-  let hours = parseInt(timeParts[0]);
-  let minutes = parseInt(timeParts[1]);
+export function computeMinutesSinceMidnight(dateTime, referenceDate) {
+  let compareTime = new Date(dateTime);
+  let referenceTime = new Date(referenceDate + "T00:00");
 
-  let minutesSinceMidnight = hours * 60 + minutes;
+  let timeDifferenceMilliseconds = compareTime - referenceTime;
+  let minutesSinceMidnight = Math.floor(timeDifferenceMilliseconds / (1000 * 60));
 
   return minutesSinceMidnight;
 }

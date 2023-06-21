@@ -6,15 +6,25 @@
   import { computeTimeDifference, computeMinutesSinceMidnight } from "$lib/shared/dateHelper.js";
 
   // Stores
-  import eventStore from "$lib/stores/eventStore.js";
   import calendarStore from "$lib/stores/calendarStore.js";
   
   // Properties
-  export let eventId;
+  export let event;
+  export let date;
 
-  $: event = $eventStore.find(e => e.id === eventId);
-  $: startTimeMinutes = computeMinutesSinceMidnight(event.startTime);
-  $: eventDuration = computeTimeDifference(event.startTime, event.endTime);
+  let startTimeMinutes;
+  let eventDuration;
+  $: {
+    startTimeMinutes = computeMinutesSinceMidnight(event.startTime, date);
+    eventDuration = computeTimeDifference(event.startTime, event.endTime);
+    if (startTimeMinutes < 0) {
+      eventDuration = startTimeMinutes + eventDuration;
+      startTimeMinutes = 0;
+    }
+    if (startTimeMinutes + eventDuration > 24*60) {
+      eventDuration = 24*60 - startTimeMinutes;
+    }
+  }
 
   $: calendar = $calendarStore.find(c => c.id === event.calendarId);
 </script>
