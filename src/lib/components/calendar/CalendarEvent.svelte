@@ -11,6 +11,8 @@
   // Properties
   export let event;
   export let date;
+  export let blockSqueeze;
+  export let textSqueeze;
 
   let startTimeMinutes;
   let eventDuration;
@@ -31,8 +33,9 @@
 
 <div class="calendar-event" style="top: calc({startTimeMinutes} * {oneMinuteHeight});
                                    height: calc({eventDuration} * {oneMinuteHeight}); 
-                                   background-color: {calendar.color};">
-  <div class="details-container">
+                                   background-color: {calendar.color};
+                                   width: {blockSqueeze};">
+  <div class="details-container" style="width: {textSqueeze};">
     <div>{event.name}</div>
     <div>{event.startTime} - {event.endTime}</div>
   </div>
@@ -42,11 +45,13 @@
   .calendar-event {
     border: 1px solid azure;
     position: absolute;
+    overflow: hidden;
     width: 100%;
     right: 0px;
   }
   .details-container {
     padding: 5px;
     position: static;
+    font-size: .9em;
   }
 </style>

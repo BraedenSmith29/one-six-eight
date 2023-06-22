@@ -98,3 +98,15 @@ export function eventOnDay(startTime, endTime, date) {
   // Check if targetDate falls between startDate and endDate (inclusive)
   return targetDate >= startDate && targetDate <= endDate;
 }
+
+// Returns the difference between 2 times in YYYY-MM-DDTHH:MM format
+// Positive if time1 is after time2
+export function timeDifference(time1, time2) {
+  let time1Date = new Date(time1);
+  let time2Date = new Date(time2);
+
+  let differenceMs = time1Date - time2Date;
+  let differenceMin = differenceMs / 1000 / 60;
+
+  return differenceMin;
+}

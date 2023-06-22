@@ -1,6 +1,6 @@
 <script>
   // Helper functions
-  import { getArrayOfDays, getCurrentDate, parseDateString, eventOnDay } from "$lib/shared/dateHelper.js";
+  import { getArrayOfDays, getCurrentDate, parseDateString, eventOnDay, timeDifference } from "$lib/shared/dateHelper.js";
 
   // Components
   import CalendarEvent from "$lib/components/calendar/CalendarEvent.svelte";
@@ -15,9 +15,46 @@
   let dayOffset = 2;
   let showAllTasks = false;
 
+  // Negative if time1 is before time2
+  function compareTimes(time1, time2) {
+    if (time1 < time2) return -1;
+    else if (time1 > time2) return 1;
+    else return 0;
+  }
+  
+  // Sort the events
+  let sortedEvents;
+  $: {
+    sortedEvents = $eventStore.filter(e => $calendarStore.find(c => c.id === e.calendarId).showInCalendarView)
+                              .sort((e1, e2) => compareTimes(e1.startTime, e2.startTime) || compareTimes(e2.endTime, e1.endTime))
+                              .map(e => ({event: e, blockSqueeze: 100, textSqueeze: 100}));
+    // Now set the squeeze factor of each event
+    sortedEvents.forEach((e, i) => {
+      sortedEvents.slice(i + 1).forEach(f => {
+        if (timeDifference(f.event.startTime, e.event.startTime) <= 60) {
+          // If f starts less than or equal to an hour after e
+          f.blockSqueeze -= 30;
+          e.textSqueeze = (30 / e.blockSqueeze) * 100;
+        }else
+        if (timeDifference(f.event.startTime, e.event.endTime) < 0) {
+          // If f starts before e ends
+          f.blockSqueeze -= 5;
+        }
+      });
+      // Make sure we can at least see it
+      if (e.blockSqueeze < 5) {
+        e.blockSqueeze = 5;
+        e.textSqueeze = 100;
+      }
+      // Take advantage of ~janky typing~ to turn these into percent strings for the css
+      e.blockSqueeze += "%";
+      e.textSqueeze += "%";
+    });
+  }
+
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
-    events: $eventStore.filter(e => eventOnDay(e.startTime, e.endTime, d) && $calendarStore.find(c => c.id === e.calendarId).showInCalendarView),
+    events: sortedEvents.filter(e => eventOnDay(e.event.startTime, e.event.endTime, d)), 
     tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $projectStore.find(p => p.id === t.projectId).showInCalendarView)
   }));
 
@@ -65,7 +102,9 @@
     <div class="day-column">
       <div class="event-wrapper">
         {#each date.events as event}
-          <CalendarEvent event={event} date={date.details.dateString} />
+          <CalendarEvent event={event.event} date={date.details.dateString}
+                         blockSqueeze={event.blockSqueeze} 
+                         textSqueeze={event.textSqueeze} />
         {/each}
       </div>
     </div>
