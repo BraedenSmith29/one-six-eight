@@ -13,7 +13,6 @@
   import projectStore from "$lib/stores/projectStore.js";
 
   let dayOffset = 2;
-
   let showAllTasks = false;
 
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({

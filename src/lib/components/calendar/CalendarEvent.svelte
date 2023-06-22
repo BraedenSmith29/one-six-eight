@@ -42,6 +42,7 @@
   .calendar-event {
     border: 1px solid azure;
     position: absolute;
+    width: 100%;
     right: 0px;
   }
   .details-container {

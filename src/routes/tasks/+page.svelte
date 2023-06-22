@@ -39,6 +39,7 @@
           id: addTaskFields.projectId,
           name: "Project " + addTaskFields.projectId,
           color: addTaskFields.projectColor,
+          showInCalendarView: true
         }
         return [...storedProjects, newProject];
       });
