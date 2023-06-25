@@ -1,9 +1,9 @@
 <script>
   // Constants
-  const oneMinuteHeight = 100 / (24 * 60) + "%";
+  const ONE_MINUTE_PERCENT = 100 / (24 * 60) + "%";
 
   // Helper functions
-  import { computeTimeDifference, computeMinutesSinceMidnight } from "$lib/shared/dateHelper.js";
+  import { computeTimeDifference, computeMinutesSinceMidnight, changeTimeByMinutes } from "$lib/shared/dateHelper.js";
 
   // Stores
   import calendarStore from "$lib/stores/calendarStore.js";
@@ -31,98 +31,85 @@
 
   $: calendar = $calendarStore.find(c => c.id === event.calendarId);
 
-  // DANGER ZONE
+  // ********************
+  // ** Event Movement **
+  // ********************
   let box = null;
-  let resizeInitial = null;
-  function hover(e) {
-    if (resizeInitial != null) return;
+  let resizeValues = null;
 
-    if (e.layerY <= 10 || e.layerY >= box.getBoundingClientRect().height - 10) {
-      document.body.style.cursor = "ns-resize";
-		} else {
-      document.body.style.cursor = "pointer"; 
-		}
+  function handleMouseHover(e, startHover) {
+    if (resizeValues != null) return;
+
+    if (startHover) {
+      if (e.layerY <= 10 || e.layerY >= box.getBoundingClientRect().height - 10) {
+        document.body.style.cursor = "ns-resize";
+      } else {
+        document.body.style.cursor = "pointer"; 
+      }
+    } else {
+      document.body.style.cursor = null;
+    }
   }
 
-  function resetCursor(e) {
-    if (resizeInitial != null) return;
-
-    document.body.style.cursor = null;
-  }
-
-  function mouseDown(e) {
-		const rect = box.getBoundingClientRect();
-		const parent = box.parentElement.getBoundingClientRect();
-		
-    resizeInitial = {
-      height: rect.height,
-      width: parent.width / 0.95,
-			top: rect.top - parent.top,
-		  y: e.pageY,
-      rootX: rect.left,
-      oneMinuteHeight: parent.height / (24*60)
+  function mouseDown(e) {		
+    resizeValues = {
+		  yAnchor: e.pageY,
+      initialCursor: document.body.style.cursor,
+      event: event,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      parent: box.parentElement
     }
 		
-    console.log(parent.width);
-
 		if (e.layerY <= 10) {
-      resizeInitial.moveType = "top";
-		} else if (e.layerY >= resizeInitial.height - 10) {
-      resizeInitial.moveType = "bottom";
+      resizeValues.moveType = "top";
+		} else if (e.layerY >= box.getBoundingClientRect().height - 10) {
+      resizeValues.moveType = "bottom";
 		} else {
-			resizeInitial.moveType = "move";
+			resizeValues.moveType = "move";
       document.body.style.cursor = "move";
 		}
 
+    // Bind the functions to handle movement
 		window.addEventListener('mousemove', mouseMove)	
 		window.addEventListener('mouseup', mouseUp)	
 	}
 	
 	function mouseUp() {
-		resizeInitial = null;
+    document.body.style.cursor = resizeValues.initialCursor;
     
-    document.body.style.cursor = null;
+		resizeValues = null;
 		
+    // Unbind the movement functions
 		window.removeEventListener('mousemove', mouseMove)	
 		window.removeEventListener('mouseup', mouseUp)	
 	}
 
-  function changeTimeByMinutes(timeString, minutes) {
-    const date = new Date(timeString);
-    date.setMinutes(date.getMinutes() + minutes);
-    
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const updatedMinutes = String(date.getMinutes()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}T${hours}:${updatedMinutes}`;
-  }
-	
 	function mouseMove(e) {
+    // Calculate height of a minute and fifteen minutes in pixels and the width of the columns
+    const PARENT_RECT = resizeValues.parent.getBoundingClientRect();
+    const ONE_MINUTE_HEIGHT = PARENT_RECT.height / (24*60);
+    const COLUMN_WIDTH = PARENT_RECT.width / 0.95 + 1;
+    const FIFTEEN_MINUTES_HEIGHT = ONE_MINUTE_HEIGHT * 15;
+
     // Quantize the pixel and minute deltas to 15 minute increments
-    let pixelsPerFifteenMinutes = resizeInitial.oneMinuteHeight * 15;
-		let pixelDelta = Math.round((e.pageY - resizeInitial.y) / pixelsPerFifteenMinutes) * pixelsPerFifteenMinutes;
-    let minuteDelta = pixelDelta / resizeInitial.oneMinuteHeight;
+		let pixelDelta = Math.round((e.pageY - resizeValues.yAnchor) / FIFTEEN_MINUTES_HEIGHT) * FIFTEEN_MINUTES_HEIGHT;
+    let minuteDelta = pixelDelta / ONE_MINUTE_HEIGHT;
 
-    console.log(Math.floor((e.pageX - resizeInitial.rootX) / resizeInitial.width));
-    minuteDelta += 24*60 * Math.floor((e.pageX - resizeInitial.rootX) / resizeInitial.width);
-    resizeInitial.rootX += Math.floor((e.pageX - resizeInitial.rootX) / resizeInitial.width) * resizeInitial.width;
-
+    // Count the difference in days based on X position and shift the minute delta by the amount of days
+    let dayDelta = Math.floor((e.pageX - PARENT_RECT.left) / COLUMN_WIDTH);
+    minuteDelta += dayDelta * 24*60;
+    
     if (minuteDelta === 0) return;
 
-    // Update the y position anchor to avoid multiple updates within the same "rounding chunk"
-    resizeInitial.y = resizeInitial.y + pixelDelta;
-
-		if (resizeInitial.moveType == "move") {
+		if (resizeValues.moveType == "move") {
       // Shift the start and end times in sync to "move" the event
-      event.startTime = changeTimeByMinutes(event.startTime, minuteDelta);
-      event.endTime = changeTimeByMinutes(event.endTime, minuteDelta);
-		} else if (resizeInitial.moveType == "top") {
-      event.startTime = changeTimeByMinutes(event.startTime, minuteDelta);
-		} else if (resizeInitial.moveType == "bottom") {
-      event.endTime = changeTimeByMinutes(event.endTime, minuteDelta);
+      resizeValues.event.startTime = changeTimeByMinutes(resizeValues.startTime, minuteDelta);
+      resizeValues.event.endTime = changeTimeByMinutes(resizeValues.endTime, minuteDelta);
+		} else if (resizeValues.moveType == "top") {
+      resizeValues.event.startTime = changeTimeByMinutes(resizeValues.startTime, minuteDelta);
+		} else if (resizeValues.moveType == "bottom") {
+      resizeValues.event.endTime = changeTimeByMinutes(resizeValues.endTime, minuteDelta);
 		}
 
     // Push the event updates to the event store
@@ -130,11 +117,11 @@
 	}
 </script>
 
-<div class="calendar-event" bind:this={box} on:mousedown={mouseDown} on:mousemove={hover} on:mouseleave={resetCursor}
-     style="top: calc({startTimeMinutes} * {oneMinuteHeight});
-     height: calc({eventDuration} * {oneMinuteHeight});
-     width: {blockSqueeze};
-     background-color: {calendar.color};">
+<div class="calendar-event" bind:this={box} on:mousedown={mouseDown} on:mousemove={e => handleMouseHover(e, true)} on:mouseleave={e => handleMouseHover(e, false)}
+     style="top: calc({startTimeMinutes} * {ONE_MINUTE_PERCENT});
+            height: calc({eventDuration} * {ONE_MINUTE_PERCENT});
+            width: {blockSqueeze};
+            background-color: {calendar.color};">
   <div class="details-container" style="width: {textSqueeze};">
     <div>{event.name}</div>
     <div>{event.startTime} - {event.endTime}</div>
@@ -154,5 +141,6 @@
     padding: 5px;
     position: static;
     font-size: .9em;
+    box-sizing: border-box;
   }
 </style>
