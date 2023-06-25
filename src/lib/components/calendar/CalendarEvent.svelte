@@ -51,16 +51,20 @@
     }
   }
 
-  function mouseDown(e) {		
+  function mouseDown(e) {
+    const parent = box.parentElement;
+    
+    // Create a budle of important values for resizing the box later
     resizeValues = {
-		  yAnchor: e.pageY,
+      initialDeltaY: e.pageY - parent.getBoundingClientRect().top,
       initialCursor: document.body.style.cursor,
       event: event,
       startTime: event.startTime,
       endTime: event.endTime,
-      parent: box.parentElement
+      parent: parent
     }
 		
+    // Decide whether to resize from the top, bottom, or move
 		if (e.layerY <= 10) {
       resizeValues.moveType = "top";
 		} else if (e.layerY >= box.getBoundingClientRect().height - 10) {
@@ -93,7 +97,7 @@
     const FIFTEEN_MINUTES_HEIGHT = ONE_MINUTE_HEIGHT * 15;
 
     // Quantize the pixel and minute deltas to 15 minute increments
-		let pixelDelta = Math.round((e.pageY - resizeValues.yAnchor) / FIFTEEN_MINUTES_HEIGHT) * FIFTEEN_MINUTES_HEIGHT;
+		let pixelDelta = Math.round(((e.pageY - PARENT_RECT.top) - resizeValues.initialDeltaY) / FIFTEEN_MINUTES_HEIGHT) * FIFTEEN_MINUTES_HEIGHT;
     let minuteDelta = pixelDelta / ONE_MINUTE_HEIGHT;
 
     // Count the difference in days based on X position and shift the minute delta by the amount of days
