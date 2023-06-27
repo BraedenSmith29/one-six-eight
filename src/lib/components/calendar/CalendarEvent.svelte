@@ -104,8 +104,6 @@
     let dayDelta = Math.floor((e.pageX - PARENT_RECT.left) / COLUMN_WIDTH);
     minuteDelta += dayDelta * 24*60;
     
-    if (minuteDelta === 0) return;
-
 		if (resizeValues.moveType == "move") {
       // Shift the start and end times in sync to "move" the event
       resizeValues.event.startTime = changeTimeByMinutes(resizeValues.startTime, minuteDelta);
