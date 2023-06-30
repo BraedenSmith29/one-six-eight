@@ -112,6 +112,9 @@
 
     // Count the difference in days based on X position and shift the minute delta by the amount of days
     let dayDelta = Math.floor((e.pageX - PARENT_RECT.left) / COLUMN_WIDTH);
+    // Limit the out of bounds to 1 day
+    if (pos + dayDelta < -1) dayDelta = -1 - pos;
+    if (pos + dayDelta > 7) dayDelta = 7 - pos;
     minuteDelta += dayDelta * 24*60;
     
 		if (resizeValues.moveType == "move") {
