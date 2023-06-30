@@ -3,6 +3,7 @@
   import { getArrayOfDays, getCurrentDate, parseDateString, eventOnDay, timeDifference } from "$lib/shared/dateHelper.js";
 
   // Components
+  import Modal from "$lib/components/shared/Modal.svelte";
   import CalendarEvent from "$lib/components/calendar/CalendarEvent.svelte";
   import CalendarTaskItem from "$lib/components/calendar/CalendarTaskItem.svelte";
 
@@ -61,6 +62,33 @@
   const shiftDateWindowRight = (amount) => {
     dayOffset -= amount;
   }
+
+  let addEventFields;
+  let showModal = false;
+  function toggleModal() {
+    // Clear the fields and toggle
+    addEventFields = {
+      name: "",
+      startTime: "",
+      endTime: "",
+      description: "",
+    };
+    showModal = !showModal;
+  }
+  function addEvent() {
+    eventStore.update(events => {
+      let newEvent = {
+        id: Math.max(...events.map(e => e.id)) + 1,
+        name: addEventFields.name,
+        startTime: addEventFields.startTime,
+        endTime: addEventFields.endTime,
+        description: addEventFields.description,
+        calendarId: 1
+      };
+      return [...events, newEvent];
+    });
+    toggleModal();
+  }
 </script>
 
 <div class="controls-header">
@@ -100,7 +128,7 @@
   </div>
   {#each dateWindow as date, i}
     <div class="day-column">
-      <div class="event-wrapper">
+      <div class="event-wrapper" on:click|self={toggleModal}>
         {#each date.events as event}
           <CalendarEvent event={event.event} pos={i} date={date.details.dateString}
                          blockSqueeze={event.blockSqueeze} 
@@ -110,6 +138,27 @@
     </div>
   {/each}
 </div>
+<Modal showModal={showModal} on:exit={toggleModal}>
+  <div class="add-event-modal">
+    <label>
+      <span>Event Name: </span>
+      <input type="textbox" bind:value={addEventFields.name}>
+    </label>
+    <label>
+      <span>Start Time: </span>
+      <input type="textbox" bind:value={addEventFields.startTime}>
+    </label>
+    <label>
+      <span>End Time: </span>
+      <input type="textbox" bind:value={addEventFields.endTime}>
+    </label>
+    <label>
+      <span>Description: </span>
+      <input type="textbox" bind:value={addEventFields.description}>
+    </label>
+    <button on:click={addEvent}>Add Event</button>
+  </div>
+</Modal>
 
 <style>
   .controls-header {
@@ -175,5 +224,9 @@
     height: 100%;
     width: 95%;
     position: relative;
+  }
+  .add-event-modal label {
+    display: block;
+    margin: 5px 0px;
   }
 </style>
