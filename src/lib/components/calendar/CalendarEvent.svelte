@@ -4,6 +4,9 @@
 
   // Helper functions
   import { computeTimeDifference, computeMinutesSinceMidnight, changeTimeByMinutes } from "$lib/shared/dateHelper.js";
+  
+  // Components
+  import EventEditPopout from "./EventEditPopout.svelte";
 
   // Stores
   import calendarStore from "$lib/stores/calendarStore.js";
@@ -11,6 +14,7 @@
   
   // Properties
   export let event;
+  export let pos;
   export let date;
   export let blockSqueeze;
   export let textSqueeze;
@@ -30,6 +34,8 @@
   }
 
   $: calendar = $calendarStore.find(c => c.id === event.calendarId);
+
+  let showEventEditPopout = false;
 
   // ********************
   // ** Event Movement **
@@ -61,7 +67,8 @@
       event: event,
       startTime: event.startTime,
       endTime: event.endTime,
-      parent: parent
+      parent: parent,
+      moved: false
     }
 		
     // Decide whether to resize from the top, bottom, or move
@@ -71,7 +78,6 @@
       resizeValues.moveType = "bottom";
 		} else {
 			resizeValues.moveType = "move";
-      document.body.style.cursor = "move";
 		}
 
     // Bind the functions to handle movement
@@ -82,6 +88,8 @@
 	function mouseUp() {
     document.body.style.cursor = resizeValues.initialCursor;
     
+    if (!resizeValues.moved) showEventEditPopout = true;
+    
 		resizeValues = null;
 		
     // Unbind the movement functions
@@ -90,6 +98,8 @@
 	}
 
 	function mouseMove(e) {
+    resizeValues.moved = true;
+
     // Calculate height of a minute and fifteen minutes in pixels and the width of the columns
     const PARENT_RECT = resizeValues.parent.getBoundingClientRect();
     const ONE_MINUTE_HEIGHT = PARENT_RECT.height / (24*60);
@@ -105,12 +115,15 @@
     minuteDelta += dayDelta * 24*60;
     
 		if (resizeValues.moveType == "move") {
+      document.body.style.cursor = "move";
       // Shift the start and end times in sync to "move" the event
       resizeValues.event.startTime = changeTimeByMinutes(resizeValues.startTime, minuteDelta);
       resizeValues.event.endTime = changeTimeByMinutes(resizeValues.endTime, minuteDelta);
 		} else if (resizeValues.moveType == "top") {
+      document.body.style.cursor = "ns-resize";
       resizeValues.event.startTime = changeTimeByMinutes(resizeValues.startTime, minuteDelta);
 		} else if (resizeValues.moveType == "bottom") {
+      document.body.style.cursor = "ns-resize";
       resizeValues.event.endTime = changeTimeByMinutes(resizeValues.endTime, minuteDelta);
 		}
 
@@ -129,6 +142,9 @@
     <div>{event.startTime} - {event.endTime}</div>
   </div>
 </div>
+{#if showEventEditPopout}
+  <EventEditPopout event={event} pos={pos} on:exit={() => showEventEditPopout = false}/>
+{/if}
 
 <style>
   .calendar-event {

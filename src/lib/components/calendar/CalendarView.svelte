@@ -98,11 +98,11 @@
   </div>
   <div class="line-overflow-column">
   </div>
-  {#each dateWindow as date}
+  {#each dateWindow as date, i}
     <div class="day-column">
       <div class="event-wrapper">
         {#each date.events as event}
-          <CalendarEvent event={event.event} date={date.details.dateString}
+          <CalendarEvent event={event.event} pos={i} date={date.details.dateString}
                          blockSqueeze={event.blockSqueeze} 
                          textSqueeze={event.textSqueeze} />
         {/each}
