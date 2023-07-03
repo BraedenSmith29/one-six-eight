@@ -2,7 +2,7 @@
   import profilePicture from "$lib/assets/profile-temp.png";
 </script>
 
-<div class="site-header">
+<header>
   <div class="header-group">
     <span class="site-title">One Six Eight</span>
     <a href="/calendar">Calendar</a>
@@ -13,13 +13,11 @@
     <a href="/insights">Insights</a>
     <img class="profile-picture" alt="Profile" src={profilePicture} />
   </div>
-</div>
-<div class="contents">
-  <slot />
-</div>
+</header>
+<slot />
 
 <style>
-  .site-header {
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,7 +30,7 @@
     align-items: center;
     gap: 25px;
   }
-  .site-header a {
+  header a {
     font-size: 1.25em;
   }
   .site-title {
@@ -44,8 +42,5 @@
   }
   .profile-picture {
     height: 50px;
-  }
-  .contents {
-    margin: 10px;
   }
 </style>

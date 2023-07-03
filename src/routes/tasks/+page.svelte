@@ -39,6 +39,7 @@
           id: addTaskFields.projectId,
           name: "Project " + addTaskFields.projectId,
           color: addTaskFields.projectColor,
+          showInCalendarView: true
         }
         return [...storedProjects, newProject];
       });
@@ -110,7 +111,7 @@
     justify-content: space-between;
     gap: 10px;
     width: 50%;
-    margin: auto;
+    margin: 10px auto;
   }
   .add-task-button {
     width: 20%;
