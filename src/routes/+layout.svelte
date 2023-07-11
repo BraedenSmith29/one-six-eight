@@ -1,5 +1,23 @@
 <script>
+  // Assets
   import profilePicture from "$lib/assets/profile-temp.png";
+  // Lifecycle Functions
+  import { invalidate } from '$app/navigation';
+  import { onMount } from 'svelte';
+  // Stores
+  import { page } from "$app/stores";
+  
+  onMount(() => {
+    // Register with state change to invalidate supabase:auth
+    const {
+      data: { subscription },
+    } = $page.data.supabase.auth.onAuthStateChange((event, newSession) => {
+      if (newSession !== $page.data.session) {
+        invalidate('supabase:auth');
+      }
+    });
+    return () => subscription.unsubscribe();
+  });
 </script>
 
 <header>
@@ -11,6 +29,7 @@
   </div>
   <div class="header-group">
     <a href="/insights">Insights</a>
+    <a href="/auth">Auth</a>
     <img class="profile-picture" alt="Profile" src={profilePicture} />
   </div>
 </header>
