@@ -17,7 +17,7 @@
     });
     if (result.error == null) {
       error = false; // May as well be thorough
-      goto('/');
+      goto('/app');
     } else {
       error = true;
       errorText = result.error;
