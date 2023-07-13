@@ -23,7 +23,7 @@
         emailRedirectTo: `${location.origin}/api/auth/callback`,
       },
     });
-    if (result.error == null) {
+    if (!result.error) {
       error = false; // May as well be thorough
       complete = true;
     } else {

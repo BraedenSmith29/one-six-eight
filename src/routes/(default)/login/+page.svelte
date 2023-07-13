@@ -15,7 +15,7 @@
       email,
       password,
     });
-    if (result.error == null) {
+    if (!result.error) {
       error = false; // May as well be thorough
       goto('/app');
     } else {

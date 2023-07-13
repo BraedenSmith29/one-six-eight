@@ -5,10 +5,10 @@
   import { goto } from "$app/navigation";
   // Stores
   import { page } from "$app/stores";
-  
+
   const handleSignOut = async () => {
     const result = await $page.data.supabase.auth.signOut();
-    if (result.error == null) {
+    if (!result.error) {
       goto("/");
     }
   };

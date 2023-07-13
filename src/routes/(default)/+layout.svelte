@@ -4,6 +4,9 @@
   
   const handleSignOut = async () => {
     const result = await $page.data.supabase.auth.signOut();
+    if (!result.error) {
+      goto("/");
+    }
   };
 </script>
 
