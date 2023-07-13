@@ -26,10 +26,7 @@
     if (result.error == null) goto('/');
   };
 
-  const handleSignOut = async () => {
-    const result = await $page.data.supabase.auth.signOut();
-    if (result.error == null) goto('/');
-  };
+  
 </script>
 
 <form>
@@ -39,4 +36,3 @@
 
 <button on:click={handleSignUp}>Sign up</button>
 <button on:click={handleSignIn}>Sign in</button>
-<button on:click={handleSignOut}>Sign out</button>

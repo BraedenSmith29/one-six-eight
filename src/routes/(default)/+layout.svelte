@@ -1,11 +1,21 @@
+<script>
+  // Stores
+  import { page } from "$app/stores";
+  
+  const handleSignOut = async () => {
+    const result = await $page.data.supabase.auth.signOut();
+  };
+</script>
+
 <header>
   <div class="header-group">
     <span class="site-title">One Six Eight</span>
-    <a href="/app">Enter App</a>
   </div>
-  <div class="header-group">
-    <a href="/auth">Auth</a>
-  </div>
+  {#if $page.data.session}
+    <div class="header-group">
+      <button on:click={handleSignOut}>Sign out</button>
+    </div>
+  {/if}
 </header>
 <slot />
 
@@ -23,7 +33,7 @@
     align-items: center;
     gap: 25px;
   }
-  header a {
+  header button {
     font-size: 1.25em;
   }
   .site-title {
