@@ -1,6 +1,17 @@
 <script>
   // Assets
   import profilePicture from "$lib/assets/profile-temp.png";
+  // Helper Functions
+  import { goto } from "$app/navigation";
+  // Stores
+  import { page } from "$app/stores";
+  
+  const handleSignOut = async () => {
+    const result = await $page.data.supabase.auth.signOut();
+    if (result.error == null) {
+      goto("/");
+    }
+  };
 </script>
 
 <header>
@@ -11,8 +22,8 @@
     <a href="/app/habits">Habits</a>
   </div>
   <div class="header-group">
-    <a href="/">Home</a>
     <a href="/app/insights">Insights</a>
+    <button on:click={handleSignOut}>Sign out</button>
     <img class="profile-picture" alt="Profile" src={profilePicture} />
   </div>
 </header>
