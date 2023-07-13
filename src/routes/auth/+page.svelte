@@ -17,16 +17,6 @@
     });
     if (result.error == null) goto('/');
   };
-
-  const handleSignIn = async () => {
-    const result = await $page.data.supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (result.error == null) goto('/');
-  };
-
-  
 </script>
 
 <form>
@@ -35,4 +25,3 @@
 </form>
 
 <button on:click={handleSignUp}>Sign up</button>
-<button on:click={handleSignIn}>Sign in</button>
