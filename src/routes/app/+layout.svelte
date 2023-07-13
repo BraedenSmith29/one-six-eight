@@ -13,7 +13,6 @@
   <div class="header-group">
     <a href="/">Home</a>
     <a href="/app/insights">Insights</a>
-    <a href="/auth">Auth</a>
     <img class="profile-picture" alt="Profile" src={profilePicture} />
   </div>
 </header>
