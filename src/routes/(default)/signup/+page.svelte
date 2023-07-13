@@ -11,9 +11,10 @@
   let errorText;
 
   let processing = false;
+  let complete = false;
 
   const handleSignUp = async () => {
-    if (processing) return;
+    if (processing || complete) return;
     processing = true;
     const result = await $page.data.supabase.auth.signUp({
       email,
@@ -24,7 +25,7 @@
     });
     if (result.error == null) {
       error = false; // May as well be thorough
-      goto('/');
+      complete = true;
     } else {
       error = true;
       errorText = result.error;
@@ -35,15 +36,20 @@
 
 <div class="contents">
   <h1>Sign Up</h1>
-  <form on:submit|preventDefault={handleSignUp}>
-    <input type="text" name="email" placeholder="Email" required bind:value={email}>
-    <input type="password" name="password" placeholder="Password" required bind:value={password}>
-    <button type="submit">{processing ? "Loading..." : "Create Account"}</button>
-  </form>
-  {#if error}
-    <p class="error-text">{errorText}</p>
+  {#if complete}
+    <p>Sign up complete. Check your email for a link to sign in.</p>
+    <button on:click={() => goto("/")}>Go to Homepage</button>
+  {:else}
+    <form on:submit|preventDefault={handleSignUp}>
+      <input type="text" name="email" placeholder="Email" required bind:value={email}>
+      <input type="password" name="password" placeholder="Password" required bind:value={password}>
+      <button type="submit">{processing ? "Loading..." : "Create Account"}</button>
+    </form>
+    {#if error}
+      <p class="error-text">{errorText}</p>
+    {/if}
+    <a href="/login">Already have an account? Sign in!</a>
   {/if}
-  <a href="/login">Already have an account? Sign in!</a>
 </div>
 
 <style>
