@@ -11,7 +11,7 @@
       <a href="/app">Enter App</a>
     {:else}
       <a href="/login">Login</a>
-      <a href="/create-account">Create Account</a>
+      <a href="/signup">Create Account</a>
     {/if}
   </div>
 </div>

@@ -10,10 +10,17 @@
   let error = false;
   let errorText;
 
-  const handleSignIn = async () => {
-    const result = await $page.data.supabase.auth.signInWithPassword({
+  let processing = false;
+
+  const handleSignUp = async () => {
+    if (processing) return;
+    processing = true;
+    const result = await $page.data.supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${location.origin}/api/auth/callback`,
+      },
     });
     if (result.error == null) {
       error = false; // May as well be thorough
@@ -22,20 +29,21 @@
       error = true;
       errorText = result.error;
     }
+    processing = false;
   };
 </script>
 
 <div class="contents">
-  <h1>Login</h1>
-  <form on:submit={handleSignIn}>
+  <h1>Sign Up</h1>
+  <form on:submit|preventDefault={handleSignUp}>
     <input type="text" name="email" placeholder="Email" required bind:value={email}>
     <input type="password" name="password" placeholder="Password" required bind:value={password}>
-    <button type="submit">Login</button>
+    <button type="submit">{processing ? "Loading..." : "Create Account"}</button>
   </form>
   {#if error}
     <p class="error-text">{errorText}</p>
   {/if}
-  <a href="/signup">Don't have an account? Sign up!</a>
+  <a href="/login">Already have an account? Sign in!</a>
 </div>
 
 <style>
