@@ -27,7 +27,7 @@
 
 <div class="contents">
   <h1>Login</h1>
-  <form on:submit={handleSignIn}>
+  <form on:submit|preventDefault={handleSignIn}>
     <input type="text" name="email" placeholder="Email" required bind:value={email}>
     <input type="password" name="password" placeholder="Password" required bind:value={password}>
     <button type="submit">Login</button>
