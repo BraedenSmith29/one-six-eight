@@ -11,7 +11,7 @@
     const {
       data: { subscription },
     } = $page.data.supabase.auth.onAuthStateChange((event, newSession) => {
-      if (newSession !== $page.data.session) {
+      if (newSession?.expires_at !== $page.data.session?.expires_at) {
         invalidate('supabase:auth');
       }
     });
