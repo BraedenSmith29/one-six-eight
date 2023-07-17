@@ -93,14 +93,14 @@
   {/if}
 </div>
 <Modal showModal={showModal} on:exit={toggleModal}>
-  <h2>Edit Event</h2>
+  <h2>Edit Group</h2>
   <form class="edit-group-modal" on:submit|preventDefault={editGroup}>
     <label>
       <span>Group Name: </span>
       <input type="textbox" bind:value={editGroupFields.title}>
     </label>
     <label>
-      <span>Habit Color: </span>
+      <span>Group Color: </span>
       <input type="color" bind:value={editGroupFields.color}>
     </label>
     {#if loading}
