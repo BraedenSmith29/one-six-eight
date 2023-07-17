@@ -22,9 +22,9 @@
     habitStore.update(habits => {
       let newHabit = {
         id: Math.max(...habits.map(h => h.id)) + 1,
-        name: addHabitFields.name,
+        title: addHabitFields.name,
         color: addHabitFields.color,
-        habitHistory: [],
+        history: [],
       }
       habits = [...habits, newHabit];
       return habits;
