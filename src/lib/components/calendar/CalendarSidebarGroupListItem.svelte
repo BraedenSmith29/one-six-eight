@@ -66,11 +66,26 @@
     
     loading = false;
   };
+
+  // Toggle show
+  const toggleShow = async () => {
+    // Push the update to the store
+    $groupStore = $groupStore;
+
+    // Change on the db
+    // I don't really care if it fails, it's pretty inconsequential
+    await $page.data.supabase
+      .from("groups")
+      .update({
+        show: group.show,
+      })
+      .eq('id', group.id);
+  }
 </script>
 
 <div class="sidebar-group-list-item" style="background-color: {group.color};"
      on:mouseenter={() => editButtonVisible = true} on:mouseleave={() => editButtonVisible = false}>
-  <input type="checkbox" bind:checked={group.show}>
+  <input type="checkbox" bind:checked={group.show} on:change={toggleShow}>
   <p>{group.title}</p>
   <spacer style="flex-grow: 1" />
   {#if editButtonVisible}
