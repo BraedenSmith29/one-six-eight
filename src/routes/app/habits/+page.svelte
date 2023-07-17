@@ -2,8 +2,8 @@
   // Components
   import HabitListItem from "$lib/components/habits/HabitListItem.svelte";
   import Modal from "$lib/components/shared/Modal.svelte";
-
   // Stores
+  import { page } from "$app/stores";
   import habitStore from "$lib/stores/habitStore.js";
 
   // Add functionality and form contents variable for modal
@@ -18,18 +18,35 @@
     showModal = !showModal
   };
 
-  const addHabit = () => {
-    habitStore.update(habits => {
-      let newHabit = {
-        id: Math.max(...habits.map(h => h.id)) + 1,
-        title: addHabitFields.name,
-        color: addHabitFields.color,
-        history: [],
-      }
-      habits = [...habits, newHabit];
-      return habits;
-    });
-    toggleModal();
+  let loading = false;
+  let addHabitError = null;
+  const addHabit = async () => {
+    if (loading) return;
+    loading = true;
+
+    const { data, error } = await $page.data.supabase
+      .from("habits")
+      .insert({
+        title: addHabitFields.title,
+        color: addHabitFields.color.substring(1),
+      })
+      .select().single();
+
+    addHabitError = error;
+    if (!error) {
+      habitStore.update(habits => {
+        let newHabit = {
+          id: data.id,
+          title: addHabitFields.title,
+          color: addHabitFields.color,
+          history: [],
+        }
+        return [...habits, newHabit];
+      });
+      toggleModal();
+    }
+
+    loading = false;
   };
 </script>
 
@@ -40,17 +57,25 @@
   <button class="add-habit-button" on:click={toggleModal}>Add Habit</button>
 </div>
 <Modal showModal={showModal} on:exit={toggleModal}>
-  <div class="add-habit-modal">
+  <form class="add-habit-modal" on:submit|preventDefault={addHabit}>
+    <h2>Add Habit</h2>
     <label>
       <span>Habit Name: </span>
-      <input type="textbox" bind:value={addHabitFields.name}>
+      <input type="textbox" bind:value={addHabitFields.title}>
     </label>
     <label>
       <span>Habit Color: </span>
       <input type="color" bind:value={addHabitFields.color}>
     </label>
-    <button on:click={addHabit}>Add Habit</button>
-  </div>
+    {#if loading}
+      <p>Loading...</p>
+    {:else}
+      <button type="submit">Add Habit</button>
+    {/if}
+    {#if addHabitError}
+      <p class="error-text">{addHabitError}</p>
+    {/if}
+  </form>
 </Modal>
 
 <style>
