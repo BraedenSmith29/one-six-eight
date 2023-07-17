@@ -25,7 +25,7 @@
   // Sort the events
   let sortedEvents;
   $: {
-    sortedEvents = $eventStore.filter(e => $groupStore.find(c => c.id === e.groupId).show)
+    sortedEvents = $eventStore.filter(e => $groupStore.find(c => c.id === e.groupId)?.show)
                               .sort((e1, e2) => compareTimes(e1.startTime, e2.startTime) || compareTimes(e2.endTime, e1.endTime))
                               .map(e => ({event: e, blockSqueeze: 100, textSqueeze: 100}));
     // Now set the squeeze factor of each event
@@ -55,7 +55,7 @@
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
     events: sortedEvents.filter(e => eventOnDay(e.event.startTime, e.event.endTime, d)), 
-    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $groupStore.find(p => p.id === t.groupId).show)
+    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $groupStore.find(p => p.id === t.groupId)?.show)
   }));
 
   const shiftDateWindowRight = (amount) => {
