@@ -30,11 +30,3 @@ export const dbToStoreTaskMap = (o) => ({
   complete: o.complete,
   // TODO autoComplete: o.auto_complete
 });
-
-export const dbToStoreHabitMap = (o) => ({
-  id: o.id,
-  title: o.title,
-  color: "#" + o.color,
-  // Map the history data into the array of strings
-  history: historyData.filter(i => i.habit_id === o.id).map(i => i.entry_date)
-});

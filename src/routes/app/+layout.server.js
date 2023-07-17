@@ -60,6 +60,12 @@ const loadHabitsData = async (sbClient) => {
     console.log("Error with supabase habits history select");
     return [];
   } else {
-    return habitsData.map(dbToStoreHabitMap);
+    return habitsData.map((o) => ({
+      id: o.id,
+      title: o.title,
+      color: "#" + o.color,
+      // Map the history data into the array of strings
+      history: historyData.filter(i => i.habit_id === o.id).map(i => i.entry_date)
+    }));
   }
 }
