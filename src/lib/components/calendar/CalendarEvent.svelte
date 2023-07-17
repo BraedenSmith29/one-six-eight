@@ -9,7 +9,7 @@
   import EventEditPopout from "./EventEditPopout.svelte";
 
   // Stores
-  import calendarStore from "$lib/stores/calendarStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
   import eventStore from "$lib/stores/eventStore.js";
   
   // Properties
@@ -33,7 +33,7 @@
     }
   }
 
-  $: calendar = $calendarStore.find(c => c.id === event.groupId);
+  $: calendar = $groupStore.find(c => c.id === event.groupId);
 
   let showEventEditPopout = false;
 

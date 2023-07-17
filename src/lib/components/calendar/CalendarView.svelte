@@ -10,7 +10,6 @@
   // Stores
   import eventStore from "$lib/stores/eventStore.js";
   import taskStore from "$lib/stores/taskStore.js";
-  import calendarStore from "$lib/stores/calendarStore.js";
   import groupStore from "$lib/stores/groupStore.js";
 
   let dayOffset = 2;
@@ -26,7 +25,7 @@
   // Sort the events
   let sortedEvents;
   $: {
-    sortedEvents = $eventStore.filter(e => $calendarStore.find(c => c.id === e.groupId).showInCalendarView)
+    sortedEvents = $eventStore.filter(e => $groupStore.find(c => c.id === e.groupId).show)
                               .sort((e1, e2) => compareTimes(e1.startTime, e2.startTime) || compareTimes(e2.endTime, e1.endTime))
                               .map(e => ({event: e, blockSqueeze: 100, textSqueeze: 100}));
     // Now set the squeeze factor of each event

@@ -1,7 +1,6 @@
 <script>
   // Stores
   import groupStore from "$lib/stores/groupStore.js";
-  import calendarStore from "$lib/stores/calendarStore.js";
 </script>
 
 <div class="sidebar">
@@ -10,13 +9,7 @@
     <button>&lt;</button>
     <button>&gt;</button>
   </div>
-  <h2>Calendars</h2>
-  {#each $calendarStore as calendar}
-    <div style="background-color: {calendar.color};">
-      <input type="checkbox" bind:checked={calendar.showInCalendarView}>{calendar.name}
-    </div>
-  {/each}
-  <h2>Groups</h2>
+  <h2>Group Visibility</h2>
   {#each $groupStore as group}
     <div style="background-color: {group.color};">
       <input type="checkbox" bind:checked={group.show}>{group.title}
