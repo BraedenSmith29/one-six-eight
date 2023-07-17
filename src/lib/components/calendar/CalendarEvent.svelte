@@ -33,7 +33,7 @@
     }
   }
 
-  $: calendar = $calendarStore.find(c => c.id === event.calendarId);
+  $: calendar = $calendarStore.find(c => c.id === event.groupId);
 
   let showEventEditPopout = false;
 
@@ -141,7 +141,7 @@
             width: {blockSqueeze};
             background-color: {calendar.color};">
   <div class="details-container" style="width: {textSqueeze};">
-    <div>{event.name}</div>
+    <div>{event.title}</div>
     <div>{event.startTime} - {event.endTime}</div>
   </div>
 </div>

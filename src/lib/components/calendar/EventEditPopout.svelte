@@ -16,7 +16,7 @@
   function toggleEditMode() {
     if (editMode) {
       // Save first
-      event.name = editEventFields.name;
+      event.title = editEventFields.title;
       event.startTime = editEventFields.startTime;
       event.endTime = editEventFields.endTime;
       event.description = editEventFields.description;
@@ -24,7 +24,7 @@
     }
     // Clear the fields and toggle
     editEventFields = {
-      name: event.name,
+      title: event.title,
       startTime: event.startTime,
       endTime: event.endTime,
       description: event.description,
@@ -57,7 +57,7 @@
     <div class="edit-fields">
       <label>
         <span>Event Name: </span>
-        <input type="textbox" bind:value={editEventFields.name}>
+        <input type="textbox" bind:value={editEventFields.title}>
       </label>
       <label>
         <span>Start Time: </span>
@@ -73,7 +73,7 @@
       </label>
     </div>
   {:else}
-    <h3>{event.name}</h3>
+    <h3>{event.title}</h3>
     <p>{event.startTime.substring(11)} - {event.endTime.substring(11)}</p>
     <p>{event.description}</p>
   {/if}

@@ -26,7 +26,7 @@
   // Sort the events
   let sortedEvents;
   $: {
-    sortedEvents = $eventStore.filter(e => $calendarStore.find(c => c.id === e.calendarId).showInCalendarView)
+    sortedEvents = $eventStore.filter(e => $calendarStore.find(c => c.id === e.groupId).showInCalendarView)
                               .sort((e1, e2) => compareTimes(e1.startTime, e2.startTime) || compareTimes(e2.endTime, e1.endTime))
                               .map(e => ({event: e, blockSqueeze: 100, textSqueeze: 100}));
     // Now set the squeeze factor of each event
@@ -68,7 +68,7 @@
   function toggleModal() {
     // Clear the fields and toggle
     addEventFields = {
-      name: "",
+      title: "",
       startTime: "",
       endTime: "",
       description: "",
@@ -79,11 +79,11 @@
     eventStore.update(events => {
       let newEvent = {
         id: Math.max(...events.map(e => e.id)) + 1,
-        name: addEventFields.name,
+        title: addEventFields.title,
         startTime: addEventFields.startTime,
         endTime: addEventFields.endTime,
         description: addEventFields.description,
-        calendarId: 1
+        group: 1
       };
       return [...events, newEvent];
     });
@@ -142,7 +142,7 @@
   <div class="add-event-modal">
     <label>
       <span>Event Name: </span>
-      <input type="textbox" bind:value={addEventFields.name}>
+      <input type="textbox" bind:value={addEventFields.title}>
     </label>
     <label>
       <span>Start Time: </span>
