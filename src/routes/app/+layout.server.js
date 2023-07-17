@@ -1,4 +1,4 @@
-import { changeTimeByMinutes } from "$lib/shared/dateHelper";
+import { dbToStoreGroupMap, dbToStoreEventMap, dbToStoreHabitMap, dbToStoreTaskMap } from "$lib/shared/dbDataMapping";
 
 export const load = async ({ locals }) => {
   console.log("Loaded user data from server")
@@ -18,12 +18,7 @@ const loadGroupsData = async (sbClient) => {
     console.log("Error with supabase groups select");
     return [];
   } else {
-    return data.map(o => ({
-      id: o.id,
-      title: o.title,
-      color: "#" + o.color,
-      show: o.show
-    }));
+    return data.map(dbToStoreGroupMap);
   }
 }
 
@@ -35,14 +30,7 @@ const loadEventsData = async (sbClient) => {
     console.log("Error with supabase events select");
     return [];
   } else {
-    return data.map(o => ({
-      id: o.id,
-      groupId: o.group_id,
-      title: o.title,
-      description: o.description,
-      startTime: o.start_time.substring(0, 16),
-      endTime: changeTimeByMinutes(o.start_time, o.duration) // TODO Change internal logic to function off of duration
-    }));
+    return data.map(dbToStoreEventMap);
   }
 }
 
@@ -54,16 +42,7 @@ const loadTasksData = async (sbClient) => {
     console.log("Error with supabase tasks select");
     return [];
   } else {
-    return data.map(o => ({
-      id: o.id,
-      groupId: o.group_id,
-      // TODO parentTaskId = o.parent_task
-      title: o.title,
-      description: o.description,
-      dueDate: o.due_time.substring(0, 10), // TODO need to have some kind of time option
-      complete: o.complete,
-      // TODO autoComplete: o.auto_complete
-    }));
+    return data.map(dbToStoreTaskMap);
   } 
 }
 
@@ -81,12 +60,6 @@ const loadHabitsData = async (sbClient) => {
     console.log("Error with supabase habits history select");
     return [];
   } else {
-    return habitsData.map(o => ({
-      id: o.id,
-      title: o.title,
-      color: "#" + o.color,
-      // Map the history data into the array of strings
-      history: historyData.filter(i => i.habit_id === o.id).map(i => i.entry_date)
-    }));
+    return habitsData.map(dbToStoreHabitMap);
   }
 }
