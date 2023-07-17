@@ -5,7 +5,7 @@
 
   // Stores
   import taskStore from "$lib/stores/taskStore.js";
-  import projectStore from "$lib/stores/projectStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
 
   // Reactively define the subsets of tasks
   $: completeTasks = $taskStore.filter(task => task.complete === true);
@@ -21,34 +21,34 @@
       description: "",
       dueDate: "",
       groupId: 1,
-      projectColor: $projectStore.find(p => p.id === 1).color,
+      groupColor: $groupStore.find(p => p.id === 1).color,
     };
     showModal = !showModal
   };
-  const modalChangeProjectColor = () => {
-    let selectedProject = $projectStore.find(p => p.id === addTaskFields.groupId);
-    addTaskFields.projectColor = selectedProject != null ? selectedProject.color : "#c6c6c6";
+  const modalChangeGroupColor = () => {
+    let selectedGroup = $groupStore.find(p => p.id === addTaskFields.groupId);
+    addTaskFields.groupColor = selectedGroup != null ? selectedGroup.color : "#c6c6c6";
   }
 
   const addTask = () => {
-    // This is pretty placeholder for project management
-    if ($projectStore.find(p => p.id === addTaskFields.groupId) == null) {
-      // If cannot find project with this id, add a new one
-      projectStore.update(storedProjects => {
-        let newProject = {
+    // This is pretty placeholder for group management
+    if ($groupStore.find(p => p.id === addTaskFields.groupId) == null) {
+      // If cannot find group with this id, add a new one
+      groupStore.update(storedGroups => {
+        let newGroup = {
           id: addTaskFields.groupId,
-          name: "Project " + addTaskFields.groupId,
-          color: addTaskFields.projectColor,
-          showInCalendarView: true
+          title: "Group " + addTaskFields.groupId,
+          color: addTaskFields.groupColor,
+          show: true
         }
-        return [...storedProjects, newProject];
+        return [...storedGroups, newGroup];
       });
     } else {
-      // If we do have this project, just update the color
-      projectStore.update(storedProjects => {
-        let project = storedProjects.find(p => p.id === addTaskFields.groupId);
-        project.color = addTaskFields.projectColor;
-        return storedProjects;
+      // If we do have this group, just update the color
+      groupStore.update(storedGroups => {
+        let group = storedGroups.find(p => p.id === addTaskFields.groupId);
+        group.color = addTaskFields.groupColor;
+        return storedGroups;
       });
     }
     // Add the task
@@ -93,12 +93,12 @@
       <input type="date" bind:value={addTaskFields.dueDate}>
     </label>
     <label>
-      <span>Project Id: </span>
-      <input type="number" bind:value={addTaskFields.groupId} on:change={modalChangeProjectColor}>
+      <span>Group Id: </span>
+      <input type="number" bind:value={addTaskFields.groupId} on:change={modalChangeGroupColor}>
     </label>
     <label>
-      <span>Project Color (optional): </span>
-      <input type="color" bind:value={addTaskFields.projectColor}>
+      <span>Group Color (optional): </span>
+      <input type="color" bind:value={addTaskFields.groupColor}>
     </label>
     <button on:click={addTask}>Add Task</button>
   </div>

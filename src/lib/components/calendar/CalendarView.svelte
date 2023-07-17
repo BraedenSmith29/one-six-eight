@@ -11,7 +11,7 @@
   import eventStore from "$lib/stores/eventStore.js";
   import taskStore from "$lib/stores/taskStore.js";
   import calendarStore from "$lib/stores/calendarStore.js";
-  import projectStore from "$lib/stores/projectStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
 
   let dayOffset = 2;
   let showAllTasks = false;
@@ -56,7 +56,7 @@
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
     events: sortedEvents.filter(e => eventOnDay(e.event.startTime, e.event.endTime, d)), 
-    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $projectStore.find(p => p.id === t.groupId).showInCalendarView)
+    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $groupStore.find(p => p.id === t.groupId).show)
   }));
 
   const shiftDateWindowRight = (amount) => {

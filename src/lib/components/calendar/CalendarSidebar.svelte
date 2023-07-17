@@ -1,6 +1,6 @@
 <script>
   // Stores
-  import projectStore from "$lib/stores/projectStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
   import calendarStore from "$lib/stores/calendarStore.js";
 </script>
 
@@ -16,10 +16,10 @@
       <input type="checkbox" bind:checked={calendar.showInCalendarView}>{calendar.name}
     </div>
   {/each}
-  <h2>Projects</h2>
-  {#each $projectStore as project}
-    <div style="background-color: {project.color};">
-      <input type="checkbox" bind:checked={project.showInCalendarView}>{project.name}
+  <h2>Groups</h2>
+  {#each $groupStore as group}
+    <div style="background-color: {group.color};">
+      <input type="checkbox" bind:checked={group.show}>{group.title}
     </div>
   {/each}
 </div>

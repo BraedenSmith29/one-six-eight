@@ -1,12 +1,12 @@
 <script>
   // Stores
   import taskStore from "$lib/stores/taskStore.js";
-  import projectStore from "$lib/stores/projectStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
 
   // Properties
   export let task;
 
-  $: project = $projectStore.find(p => p.id === task.groupId);
+  $: group = $groupStore.find(p => p.id === task.groupId);
 
   const toggleCompletion = () => {
     // Toggle the state of the checkbox
@@ -16,7 +16,7 @@
   }
 </script>
 
-<div class="calendar-task-item" style="background-color: {project.color};">
+<div class="calendar-task-item" style="background-color: {group.color};">
   <label>
     <input type="checkbox" checked={task.complete} on:change={toggleCompletion}>
     <span>{task.title}</span>
