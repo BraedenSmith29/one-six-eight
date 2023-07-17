@@ -22,6 +22,7 @@
     height: 100vh;
     width: 100vw;
     background: rgba(0,0,0,0.8);
+    z-index: 5;
   }
   .modal{
     padding: 10px;
@@ -30,5 +31,6 @@
     margin: 10% auto;
     text-align: center;
     background: white;
+    z-index: 5;
   }
 </style>
