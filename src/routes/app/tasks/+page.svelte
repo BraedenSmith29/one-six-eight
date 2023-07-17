@@ -17,27 +17,27 @@
   const toggleModal = () => {
     // Clear the fields and toggle the modal
     addTaskFields = {
-      name: "",
+      title: "",
       description: "",
       dueDate: "",
-      projectId: 1,
+      groupId: 1,
       projectColor: $projectStore.find(p => p.id === 1).color,
     };
     showModal = !showModal
   };
   const modalChangeProjectColor = () => {
-    let selectedProject = $projectStore.find(p => p.id === addTaskFields.projectId);
+    let selectedProject = $projectStore.find(p => p.id === addTaskFields.groupId);
     addTaskFields.projectColor = selectedProject != null ? selectedProject.color : "#c6c6c6";
   }
 
   const addTask = () => {
     // This is pretty placeholder for project management
-    if ($projectStore.find(p => p.id === addTaskFields.projectId) == null) {
+    if ($projectStore.find(p => p.id === addTaskFields.groupId) == null) {
       // If cannot find project with this id, add a new one
       projectStore.update(storedProjects => {
         let newProject = {
-          id: addTaskFields.projectId,
-          name: "Project " + addTaskFields.projectId,
+          id: addTaskFields.groupId,
+          name: "Project " + addTaskFields.groupId,
           color: addTaskFields.projectColor,
           showInCalendarView: true
         }
@@ -46,7 +46,7 @@
     } else {
       // If we do have this project, just update the color
       projectStore.update(storedProjects => {
-        let project = storedProjects.find(p => p.id === addTaskFields.projectId);
+        let project = storedProjects.find(p => p.id === addTaskFields.groupId);
         project.color = addTaskFields.projectColor;
         return storedProjects;
       });
@@ -56,11 +56,11 @@
       let newTask = {
         // Get the next highest id
         id: Math.max(...tasks.map(o => o.id)) + 1,
-        name: addTaskFields.name,
+        title: addTaskFields.title,
         description: addTaskFields.description,
         complete: false,
         dueDate: addTaskFields.dueDate,
-        projectId: addTaskFields.projectId,
+        groupId: addTaskFields.groupId,
       };
       tasks = [...tasks, newTask];
       return tasks;
@@ -82,7 +82,7 @@
   <div class="add-task-modal">
     <label>
       <span>Task Name: </span>
-      <input type="textbox" bind:value={addTaskFields.name}>
+      <input type="textbox" bind:value={addTaskFields.title}>
     </label>
     <label>
       <span>Description: </span>
@@ -94,7 +94,7 @@
     </label>
     <label>
       <span>Project Id: </span>
-      <input type="number" bind:value={addTaskFields.projectId} on:change={modalChangeProjectColor}>
+      <input type="number" bind:value={addTaskFields.groupId} on:change={modalChangeProjectColor}>
     </label>
     <label>
       <span>Project Color (optional): </span>

@@ -56,7 +56,7 @@
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
     events: sortedEvents.filter(e => eventOnDay(e.event.startTime, e.event.endTime, d)), 
-    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $projectStore.find(p => p.id === t.projectId).showInCalendarView)
+    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $projectStore.find(p => p.id === t.groupId).showInCalendarView)
   }));
 
   const shiftDateWindowRight = (amount) => {

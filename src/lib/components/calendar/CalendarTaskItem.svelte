@@ -6,7 +6,7 @@
   // Properties
   export let task;
 
-  $: project = $projectStore.find(p => p.id === task.projectId);
+  $: project = $projectStore.find(p => p.id === task.groupId);
 
   const toggleCompletion = () => {
     // Toggle the state of the checkbox
@@ -19,7 +19,7 @@
 <div class="calendar-task-item" style="background-color: {project.color};">
   <label>
     <input type="checkbox" checked={task.complete} on:change={toggleCompletion}>
-    <span>{task.name}</span>
+    <span>{task.title}</span>
   </label>
 </div>
 
