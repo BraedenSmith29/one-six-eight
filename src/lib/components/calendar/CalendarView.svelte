@@ -82,7 +82,7 @@
         startTime: addEventFields.startTime,
         endTime: addEventFields.endTime,
         description: addEventFields.description,
-        group: 1
+        groupId: $groupStore[0].id
       };
       return [...events, newEvent];
     });

@@ -20,8 +20,8 @@
       title: "",
       description: "",
       dueDate: "",
-      groupId: 1,
-      groupColor: $groupStore.find(p => p.id === 1).color,
+      groupId: $groupStore[0].id,
+      groupColor: $groupStore[0].color,
     };
     showModal = !showModal
   };
