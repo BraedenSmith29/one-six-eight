@@ -1,6 +1,7 @@
 <script>
   // Components
   import Modal from "$lib/components/shared/Modal.svelte";
+  import CalendarSidebarGroupListItem from './CalendarSidebarGroupListItem.svelte';
   // Stores
   import { page } from "$app/stores";
   import groupStore from "$lib/stores/groupStore.js";
@@ -58,9 +59,7 @@
   </div>
   <h2>Group Visibility</h2>
   {#each $groupStore as group}
-    <div style="background-color: {group.color};">
-      <input type="checkbox" bind:checked={group.show}>{group.title}
-    </div>
+    <CalendarSidebarGroupListItem group={group} />
   {/each}
   <spacer style="flex-grow: 1" />
   <button on:click={toggleAddGroupModal}>Add New Group</button>
