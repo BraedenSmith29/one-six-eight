@@ -33,7 +33,7 @@
       console.log("There was an error changing completion status for task " + task.id + ": " + error);
       task.complete = !task.complete;
     }
-    
+
     toggleCompletionLoading = false;
   }
 
@@ -41,6 +41,7 @@
   let showModal = false;
   const toggleModal = () => {
     // Clear the fields and toggle the modal
+    editError = null;
     editTaskFields = {
       title: task.title,
       description: task.description,
@@ -66,7 +67,7 @@
       })
       .eq('id', task.id);
 
-    editError = error;
+    editError = error?.message;
     if (!error) {
       task.title = editTaskFields.title;
       task.description = editTaskFields.description;
@@ -88,7 +89,7 @@
       .delete()
       .eq('id', task.id);
 
-    editError = error;
+    editError = error?.message;
     if (!error) {
       taskStore.update(tasks => {
         return tasks.filter(t => t.id !== task.id);

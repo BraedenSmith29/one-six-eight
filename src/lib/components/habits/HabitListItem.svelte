@@ -55,6 +55,7 @@
   let showModal = false;
   const toggleModal = () => {
     // Clear the fields and toggle the modal
+    editError = null;
     editHabitFields = {
       title: habit.title,
       color: habit.color,
@@ -76,7 +77,7 @@
       })
       .eq('id', habit.id);
 
-    editError = error;
+    editError = error?.message;
     if (!error) {
       habit.title = editHabitFields.title;
       habit.color = editHabitFields.color;
@@ -96,7 +97,7 @@
       .delete()
       .eq('id', habit.id);
 
-    editError = error;
+    editError = error?.message;
     if (!error) {
       habitStore.update(habits => {
         return habits.filter(h => h.id !== habit.id);

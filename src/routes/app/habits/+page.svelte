@@ -11,6 +11,7 @@
   let showModal = false;
   const toggleModal = () => {
     // Clear the fields and toggle the modal
+    addHabitError = null;
     addHabitFields = {
       name: "",
       color: "#c6c6c6",
@@ -32,7 +33,7 @@
       })
       .select().single();
 
-    addHabitError = error;
+    addHabitError = error?.message;
     if (!error) {
       habitStore.update(habits => {
         let newHabit = {

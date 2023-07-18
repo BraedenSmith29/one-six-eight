@@ -6,7 +6,6 @@
   import { page } from "$app/stores";
   import taskStore from "$lib/stores/taskStore.js";
   import groupStore from "$lib/stores/groupStore.js";
-    import { afterUpdate } from "svelte";
 
   // Reactively define the subsets of tasks
   $: completeTasks = $taskStore.filter(task => task.complete === true);
@@ -17,6 +16,7 @@
   let showModal = false;
   const toggleModal = () => {
     // Clear the fields and toggle the modal
+    addError = null;
     addTaskFields = {
       title: "",
       description: "",
@@ -42,7 +42,7 @@
       })
       .select().single();
     
-    addError = error;
+    addError = error?.message;
     if (!error) {
       // Add the task
       taskStore.update(tasks => {
