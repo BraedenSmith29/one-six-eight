@@ -1,17 +1,14 @@
 <script>
   // Constants
   const ONE_MINUTE_PERCENT = 100 / (24 * 60) + "%";
-
   // Helper functions
   import { computeTimeDifference, computeMinutesSinceMidnight, changeTimeByMinutes } from "$lib/shared/dateHelper.js";
-  
   // Components
   import EventEditPopout from "./EventEditPopout.svelte";
-
   // Stores
+  import { page } from "$app/stores";
   import groupStore from "$lib/stores/groupStore.js";
   import eventStore from "$lib/stores/eventStore.js";
-  
   // Properties
   export let event;
   export let pos;
@@ -85,16 +82,34 @@
 		window.addEventListener('mouseup', mouseUp)	
 	}
 	
-	function mouseUp() {
+	async function mouseUp() {
     document.body.style.cursor = resizeValues.initialCursor;
     
     if (!resizeValues.moved) showEventEditPopout = true;
+
+    let originalStart = resizeValues.startTime;
+    let originalEnd = resizeValues.endTime;
     
 		resizeValues = null;
 		
     // Unbind the movement functions
 		window.removeEventListener('mousemove', mouseMove)	
-		window.removeEventListener('mouseup', mouseUp)	
+		window.removeEventListener('mouseup', mouseUp)
+
+    // Attempt to sync the event
+    const { error } = await $page.data.supabase
+      .from("events")
+      .update({
+        start_time: event.startTime,
+        duration: computeTimeDifference(event.startTime, event.endTime)
+      })
+      .eq("id", event.id)
+      .select().single();
+    if (error) {
+      console.log("Error updating event " + event.id + ": " + error.message);
+      event.startTime = originalStart;
+      event.endTime = originalEnd;
+    }
 	}
 
 	function mouseMove(e) {
