@@ -96,19 +96,21 @@
 		window.removeEventListener('mousemove', mouseMove)	
 		window.removeEventListener('mouseup', mouseUp)
 
-    // Attempt to sync the event
-    const { error } = await $page.data.supabase
-      .from("events")
-      .update({
-        start_time: event.startTime,
-        duration: computeTimeDifference(event.startTime, event.endTime)
-      })
-      .eq("id", event.id)
-      .select().single();
-    if (error) {
-      console.log("Error updating event " + event.id + ": " + error.message);
-      event.startTime = originalStart;
-      event.endTime = originalEnd;
+    if (event.startTime !== originalStart || event.endTime !== originalEnd) {
+      // Attempt to sync the event
+      const { error } = await $page.data.supabase
+        .from("events")
+        .update({
+          start_time: event.startTime,
+          duration: computeTimeDifference(event.startTime, event.endTime)
+        })
+        .eq("id", event.id)
+        .select().single();
+      if (error) {
+        console.log("Error updating event " + event.id + ": " + error.message);
+        event.startTime = originalStart;
+        event.endTime = originalEnd;
+      }
     }
 	}
 
