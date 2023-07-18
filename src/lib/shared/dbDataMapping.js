@@ -26,7 +26,7 @@ export const dbToStoreTaskMap = (o) => ({
   // TODO parentTaskId = o.parent_task
   title: o.title,
   description: o.description,
-  dueDate: o.due_time.substring(0, 10), // TODO need to have some kind of time option
+  dueDate: o.due_time?.substring(0, 10) ?? "", // TODO need to have some kind of time option
   complete: o.complete,
   // TODO autoComplete: o.auto_complete
 });
