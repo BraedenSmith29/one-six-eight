@@ -12,11 +12,29 @@
 
   $: group = $groupStore.find(p => p.id === task.groupId);
 
-  const toggleCompletion = () => {
+  let toggleCompletionLoading = false;
+  const toggleCompletion = async () => {
+    if (toggleCompletionLoading) return;
+    toggleCompletionLoading = true;
+
     // Toggle the state of the checkbox
     task.complete = !task.complete;
     // Push the update to the store
     $taskStore = $taskStore;
+
+    const { error } = await $page.data.supabase
+      .from("tasks")
+      .update({
+        complete: task.complete
+      })
+      .eq('id', task.id);
+    
+    if (error) {
+      console.log("There was an error changing completion status for task " + task.id + ": " + error);
+      task.complete = !task.complete;
+    }
+    
+    toggleCompletionLoading = false;
   }
 
   let editTaskFields;
