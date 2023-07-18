@@ -48,7 +48,7 @@
     // Push the update to the store
     $habitStore = $habitStore;
 
-    habitHistoryLoading.filter(d => d !== day.date);
+    habitHistoryLoading = habitHistoryLoading.filter(d => d !== day.date);
   };
 
   let editHabitFields;
