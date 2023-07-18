@@ -2,10 +2,11 @@
   // Components
   import TaskListItem from "$lib/components/tasks/TaskListItem.svelte";
   import Modal from "$lib/components/shared/Modal.svelte";
-
   // Stores
+  import { page } from "$app/stores";
   import taskStore from "$lib/stores/taskStore.js";
   import groupStore from "$lib/stores/groupStore.js";
+    import { afterUpdate } from "svelte";
 
   // Reactively define the subsets of tasks
   $: completeTasks = $taskStore.filter(task => task.complete === true);
@@ -21,51 +22,44 @@
       description: "",
       dueDate: "",
       groupId: $groupStore[0].id,
-      groupColor: $groupStore[0].color,
     };
     showModal = !showModal
   };
-  const modalChangeGroupColor = () => {
-    let selectedGroup = $groupStore.find(p => p.id === addTaskFields.groupId);
-    addTaskFields.groupColor = selectedGroup != null ? selectedGroup.color : "#c6c6c6";
-  }
 
-  const addTask = () => {
-    // This is pretty placeholder for group management
-    if ($groupStore.find(p => p.id === addTaskFields.groupId) == null) {
-      // If cannot find group with this id, add a new one
-      groupStore.update(storedGroups => {
-        let newGroup = {
-          id: addTaskFields.groupId,
-          title: "Group " + addTaskFields.groupId,
-          color: addTaskFields.groupColor,
-          show: true
-        }
-        return [...storedGroups, newGroup];
-      });
-    } else {
-      // If we do have this group, just update the color
-      groupStore.update(storedGroups => {
-        let group = storedGroups.find(p => p.id === addTaskFields.groupId);
-        group.color = addTaskFields.groupColor;
-        return storedGroups;
-      });
-    }
-    // Add the task
-    taskStore.update(tasks => {
-      let newTask = {
-        // Get the next highest id
-        id: Math.max(...tasks.map(o => o.id)) + 1,
+  let loading = false;
+  let addError = null;
+  const addTask = async () => {
+    if (loading) return;
+    loading = true;
+
+    const { data, error } = await $page.data.supabase
+      .from("tasks")
+      .insert({
         title: addTaskFields.title,
         description: addTaskFields.description,
-        complete: false,
-        dueDate: addTaskFields.dueDate,
-        groupId: addTaskFields.groupId,
-      };
-      tasks = [...tasks, newTask];
-      return tasks;
-    });
-    toggleModal();
+        due_time: addTaskFields.dueDate === "" ? null : addTaskFields.dueDate,
+        group_id: addTaskFields.groupId,
+      })
+      .select().single();
+    
+    addError = error;
+    if (!error) {
+      // Add the task
+      taskStore.update(tasks => {
+        let newTask = {
+          id: data.id,
+          title: addTaskFields.title,
+          description: addTaskFields.description,
+          complete: false,
+          dueDate: addTaskFields.dueDate,
+          groupId: addTaskFields.groupId,
+        };
+        return [...tasks, newTask];
+      });
+      toggleModal();
+    }
+
+    loading = false;
   }
 </script>
 
@@ -79,7 +73,7 @@
   {/each}
 </div>
 <Modal showModal={showModal} on:exit={toggleModal}>
-  <div class="add-task-modal">
+  <form class="add-task-modal" on:submit={addTask}>
     <label>
       <span>Task Name: </span>
       <input type="textbox" bind:value={addTaskFields.title}>
@@ -93,15 +87,22 @@
       <input type="date" bind:value={addTaskFields.dueDate}>
     </label>
     <label>
-      <span>Group Id: </span>
-      <input type="number" bind:value={addTaskFields.groupId} on:change={modalChangeGroupColor}>
+      <span>Group: </span>
+      <select type="number" bind:value={addTaskFields.groupId}>
+        {#each $groupStore as group}
+          <option value={group.id}>{group.title}</option>
+        {/each}
+      </select>
     </label>
-    <label>
-      <span>Group Color (optional): </span>
-      <input type="color" bind:value={addTaskFields.groupColor}>
-    </label>
-    <button on:click={addTask}>Add Task</button>
-  </div>
+    {#if loading}
+      <p>Loading...</p>
+    {:else}
+      <button type="submit">Add Task</button>
+    {/if}
+    {#if addError}
+      <p class="error-text">{addError}</p>
+    {/if}
+  </form>
 </Modal>
 
 <style>
@@ -119,5 +120,8 @@
   .add-task-modal label {
     display: block;
     margin: 5px 0px;
+  }
+  .error-text {
+    color: red;
   }
 </style>
