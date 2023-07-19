@@ -3,6 +3,8 @@
   import profilePicture from "$lib/assets/profile-temp.png";
   // Helper Functions
   import { goto } from "$app/navigation";
+  // Lifecycle Functions
+  import { onDestroy } from "svelte";
   // Stores
   import { page } from "$app/stores";
 
@@ -12,6 +14,9 @@
       goto("/");
     }
   };
+
+  // Unsubscribe from database channels when leaving the page
+  onDestroy(() => $page.data.supabase.removeAllChannels());
 </script>
 
 <header>
