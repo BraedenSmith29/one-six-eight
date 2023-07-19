@@ -12,7 +12,7 @@
   let confirmDelete;
   
   // Reactively define historyWindow as an array of objects with the date and completion status for that date
-  $: historyWindow = getLastSevenDays().map(date => ({ date, completed: habit.history.includes(date) }));
+  $: historyWindow = getLastSevenDays().map(date => ({ date, completed: habit.history.map(d => (d.date)).includes(date) }));
 
   let habitHistoryLoading = []; // Array of dates that are loading
   const updateHistory = async (day) => {
@@ -22,14 +22,15 @@
     // Logic is sorta backwards
     if (!day.completed) {
       // If the day currently IS NOT completed, then it needs to be ADDED to the list
-      const { error } = await $page.data.supabase
+      const { data, error } = await $page.data.supabase
         .from("habit_history")
         .insert({
           habit_id: habit.id,
           entry_date: day.date,
-        });
+        })
+        .select().single();
       if (!error) {
-        habit.history = [...habit.history, day.date];
+        habit.history = [...habit.history, { id: data.id, date: day.date }];
       } else {
         console.log("There was an error completing " + day.date + ": " + error);
       }
@@ -40,7 +41,7 @@
         .delete()
         .match({ habit_id: habit.id, entry_date: day.date });
       if (!error) {
-        habit.history = habit.history.filter(d => d !== day.date);
+        habit.history = habit.history.filter(d => d.date !== day.date);
       } else {
         console.log("There was an error uncompleting " + day.date + ": " + error);
       }

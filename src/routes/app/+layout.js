@@ -77,6 +77,22 @@ export const load = async ({ parent, data }) => {
           console.error("Unrecognized change type.", payload);
         }
       })
+      .on("postgres_changes", { event: "*", schema: "public", table: "habit_history" }, payload => {
+        if (payload.eventType === "DELETE") {
+          habitStore.update(habits => {
+            habits.forEach(h => h.history = h.history.filter(i => i.id !== payload.old.id));
+            return habits;
+          });
+        } else if (payload.eventType === "INSERT") {
+          habitStore.update(habits => {
+            let habit = habits.find(h => h.id === payload.new.habit_id);
+            habit.history = [...habit.history, { id: payload.new.id, date: payload.new.entry_date }];
+            return habits;
+          });
+        } else {
+          console.error("Unrecognized change type.", payload);
+        }
+      })
       .subscribe();
   }
 }

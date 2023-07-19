@@ -65,7 +65,7 @@ const loadHabitsData = async (sbClient) => {
       title: o.title,
       color: "#" + o.color,
       // Map the history data into the array of strings
-      history: historyData.filter(i => i.habit_id === o.id).map(i => i.entry_date)
+      history: historyData.filter(i => i.habit_id === o.id).map(i => ({ id: i.id, date: i.entry_date }))
     }));
   }
 }
