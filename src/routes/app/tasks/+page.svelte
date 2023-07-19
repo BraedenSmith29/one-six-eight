@@ -2,10 +2,10 @@
   // Components
   import TaskListItem from "$lib/components/tasks/TaskListItem.svelte";
   import Modal from "$lib/components/shared/Modal.svelte";
-
   // Stores
+  import { page } from "$app/stores";
   import taskStore from "$lib/stores/taskStore.js";
-  import projectStore from "$lib/stores/projectStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
 
   // Reactively define the subsets of tasks
   $: completeTasks = $taskStore.filter(task => task.complete === true);
@@ -16,56 +16,50 @@
   let showModal = false;
   const toggleModal = () => {
     // Clear the fields and toggle the modal
+    addError = null;
     addTaskFields = {
-      name: "",
+      title: "",
       description: "",
       dueDate: "",
-      projectId: 1,
-      projectColor: $projectStore.find(p => p.id === 1).color,
+      groupId: $groupStore[0].id,
     };
     showModal = !showModal
   };
-  const modalChangeProjectColor = () => {
-    let selectedProject = $projectStore.find(p => p.id === addTaskFields.projectId);
-    addTaskFields.projectColor = selectedProject != null ? selectedProject.color : "#c6c6c6";
-  }
 
-  const addTask = () => {
-    // This is pretty placeholder for project management
-    if ($projectStore.find(p => p.id === addTaskFields.projectId) == null) {
-      // If cannot find project with this id, add a new one
-      projectStore.update(storedProjects => {
-        let newProject = {
-          id: addTaskFields.projectId,
-          name: "Project " + addTaskFields.projectId,
-          color: addTaskFields.projectColor,
-          showInCalendarView: true
-        }
-        return [...storedProjects, newProject];
-      });
-    } else {
-      // If we do have this project, just update the color
-      projectStore.update(storedProjects => {
-        let project = storedProjects.find(p => p.id === addTaskFields.projectId);
-        project.color = addTaskFields.projectColor;
-        return storedProjects;
-      });
-    }
-    // Add the task
-    taskStore.update(tasks => {
-      let newTask = {
-        // Get the next highest id
-        id: Math.max(...tasks.map(o => o.id)) + 1,
-        name: addTaskFields.name,
+  let loading = false;
+  let addError = null;
+  const addTask = async () => {
+    if (loading) return;
+    loading = true;
+
+    const { data, error } = await $page.data.supabase
+      .from("tasks")
+      .insert({
+        title: addTaskFields.title,
         description: addTaskFields.description,
-        complete: false,
-        dueDate: addTaskFields.dueDate,
-        projectId: addTaskFields.projectId,
-      };
-      tasks = [...tasks, newTask];
-      return tasks;
-    });
-    toggleModal();
+        due_time: addTaskFields.dueDate === "" ? null : addTaskFields.dueDate,
+        group_id: addTaskFields.groupId,
+      })
+      .select().single();
+    
+    addError = error?.message;
+    if (!error) {
+      // Add the task
+      taskStore.update(tasks => {
+        let newTask = {
+          id: data.id,
+          title: addTaskFields.title,
+          description: addTaskFields.description,
+          complete: false,
+          dueDate: addTaskFields.dueDate,
+          groupId: addTaskFields.groupId,
+        };
+        return [...tasks, newTask];
+      });
+      toggleModal();
+    }
+
+    loading = false;
   }
 </script>
 
@@ -79,10 +73,10 @@
   {/each}
 </div>
 <Modal showModal={showModal} on:exit={toggleModal}>
-  <div class="add-task-modal">
+  <form class="add-task-modal" on:submit={addTask}>
     <label>
       <span>Task Name: </span>
-      <input type="textbox" bind:value={addTaskFields.name}>
+      <input type="textbox" bind:value={addTaskFields.title}>
     </label>
     <label>
       <span>Description: </span>
@@ -93,15 +87,22 @@
       <input type="date" bind:value={addTaskFields.dueDate}>
     </label>
     <label>
-      <span>Project Id: </span>
-      <input type="number" bind:value={addTaskFields.projectId} on:change={modalChangeProjectColor}>
+      <span>Group: </span>
+      <select type="number" bind:value={addTaskFields.groupId}>
+        {#each $groupStore as group}
+          <option value={group.id}>{group.title}</option>
+        {/each}
+      </select>
     </label>
-    <label>
-      <span>Project Color (optional): </span>
-      <input type="color" bind:value={addTaskFields.projectColor}>
-    </label>
-    <button on:click={addTask}>Add Task</button>
-  </div>
+    {#if loading}
+      <p>Loading...</p>
+    {:else}
+      <button type="submit">Add Task</button>
+    {/if}
+    {#if addError}
+      <p class="error-text">{addError}</p>
+    {/if}
+  </form>
 </Modal>
 
 <style>
@@ -119,5 +120,8 @@
   .add-task-modal label {
     display: block;
     margin: 5px 0px;
+  }
+  .error-text {
+    color: red;
   }
 </style>

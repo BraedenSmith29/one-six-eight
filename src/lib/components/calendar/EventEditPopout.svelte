@@ -1,10 +1,10 @@
 <script>
   // Helper Functions
   import { createEventDispatcher } from "svelte";
-
+  import { timeDifference } from "$lib/shared/dateHelper.js";
   // Stores
+  import { page } from "$app/stores";
   import eventStore from "$lib/stores/eventStore.js";
-
   // Properties
   export let event;
   export let pos;
@@ -13,30 +13,52 @@
   
   let editEventFields;
   let editMode = false;
-  function toggleEditMode() {
+  async function toggleEditMode() {
     if (editMode) {
       // Save first
-      event.name = editEventFields.name;
-      event.startTime = editEventFields.startTime;
-      event.endTime = editEventFields.endTime;
-      event.description = editEventFields.description;
-      $eventStore = $eventStore;
+      const { error } = await $page.data.supabase
+        .from("events")
+        .update({
+          title: editEventFields.title,
+          description: editEventFields.description,
+          start_time: editEventFields.startTime,
+          duration: timeDifference(editEventFields.endTime, editEventFields.startTime),
+          group_id: editEventFields.groupId
+        })
+        .eq('id', event.id);
+      if (!error) {
+        event.title = editEventFields.title;
+        event.startTime = editEventFields.startTime;
+        event.endTime = editEventFields.endTime;
+        event.description = editEventFields.description;
+        $eventStore = $eventStore;
+      } else {
+        console.log("Error updating event " + event.id + ": " + error.message);
+      }
     }
     // Clear the fields and toggle
     editEventFields = {
-      name: event.name,
+      title: event.title,
       startTime: event.startTime,
       endTime: event.endTime,
       description: event.description,
+      groupId: event.groupId
     };
     editMode = !editMode
   }
 
-  function deleteEvent() {
-    eventStore.update(events => {
-      events = events.filter(e => e.id != event.id);
-      return events;
-    });
+  async function deleteEvent() {
+    const { error } = await $page.data.supabase
+      .from("events")
+      .delete()
+      .eq('id', event.id);
+
+    if (!error) {
+      eventStore.update(events => {
+        return events.filter(e => e.id !== event.id);
+      });
+    }
+    
   }
 
   window.addEventListener("mousedown", exitPopout);
@@ -57,15 +79,15 @@
     <div class="edit-fields">
       <label>
         <span>Event Name: </span>
-        <input type="textbox" bind:value={editEventFields.name}>
+        <input type="textbox" bind:value={editEventFields.title}>
       </label>
       <label>
         <span>Start Time: </span>
-        <input type="textbox" bind:value={editEventFields.startTime}>
+        <input type="datetime-local" bind:value={editEventFields.startTime}>
       </label>
       <label>
         <span>End Time: </span>
-        <input type="textbox" bind:value={editEventFields.endTime}>
+        <input type="datetime-local" bind:value={editEventFields.endTime}>
       </label>
       <label>
         <span>Description: </span>
@@ -73,7 +95,7 @@
       </label>
     </div>
   {:else}
-    <h3>{event.name}</h3>
+    <h3>{event.title}</h3>
     <p>{event.startTime.substring(11)} - {event.endTime.substring(11)}</p>
     <p>{event.description}</p>
   {/if}

@@ -1,17 +1,15 @@
 <script>
   // Helper functions
   import { getArrayOfDays, getCurrentDate, parseDateString, eventOnDay, timeDifference } from "$lib/shared/dateHelper.js";
-
   // Components
   import Modal from "$lib/components/shared/Modal.svelte";
   import CalendarEvent from "$lib/components/calendar/CalendarEvent.svelte";
   import CalendarTaskItem from "$lib/components/calendar/CalendarTaskItem.svelte";
-
   // Stores
+  import { page } from "$app/stores";
   import eventStore from "$lib/stores/eventStore.js";
   import taskStore from "$lib/stores/taskStore.js";
-  import calendarStore from "$lib/stores/calendarStore.js";
-  import projectStore from "$lib/stores/projectStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
 
   let dayOffset = 2;
   let showAllTasks = false;
@@ -26,7 +24,7 @@
   // Sort the events
   let sortedEvents;
   $: {
-    sortedEvents = $eventStore.filter(e => $calendarStore.find(c => c.id === e.calendarId).showInCalendarView)
+    sortedEvents = $eventStore.filter(e => $groupStore.find(c => c.id === e.groupId)?.show)
                               .sort((e1, e2) => compareTimes(e1.startTime, e2.startTime) || compareTimes(e2.endTime, e1.endTime))
                               .map(e => ({event: e, blockSqueeze: 100, textSqueeze: 100}));
     // Now set the squeeze factor of each event
@@ -56,7 +54,7 @@
   $: dateWindow = getArrayOfDays(7, dayOffset).map(d => ({
     details: parseDateString(d), 
     events: sortedEvents.filter(e => eventOnDay(e.event.startTime, e.event.endTime, d)), 
-    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $projectStore.find(p => p.id === t.projectId).showInCalendarView)
+    tasks: $taskStore.filter(t => t.dueDate === d && !t.complete && $groupStore.find(p => p.id === t.groupId)?.show)
   }));
 
   const shiftDateWindowRight = (amount) => {
@@ -67,27 +65,51 @@
   let showModal = false;
   function toggleModal() {
     // Clear the fields and toggle
+    addError = null;
     addEventFields = {
-      name: "",
+      title: "",
       startTime: "",
       endTime: "",
       description: "",
+      groupId: $groupStore[0].id,
     };
     showModal = !showModal;
   }
-  function addEvent() {
-    eventStore.update(events => {
-      let newEvent = {
-        id: Math.max(...events.map(e => e.id)) + 1,
-        name: addEventFields.name,
-        startTime: addEventFields.startTime,
-        endTime: addEventFields.endTime,
+
+  let loading = false;
+  let addError = null;
+  async function addEvent() {
+    if (loading) return;
+    loading = true;
+
+    const { data, error } = await $page.data.supabase
+      .from("events")
+      .insert({
+        title: addEventFields.title,
         description: addEventFields.description,
-        calendarId: 1
-      };
-      return [...events, newEvent];
-    });
-    toggleModal();
+        start_time: addEventFields.startTime,
+        duration: timeDifference(addEventFields.endTime, addEventFields.startTime),
+        group_id: addEventFields.groupId
+      })
+      .select().single();
+
+    addError = error?.message;
+    if (!error) {
+      eventStore.update(events => {
+        let newEvent = {
+          id: data.id,
+          title: addEventFields.title,
+          startTime: addEventFields.startTime,
+          endTime: addEventFields.endTime,
+          description: addEventFields.description,
+          groupId: addEventFields.groupId
+        };
+        return [...events, newEvent];
+      });
+      toggleModal();
+    }
+
+    loading = false;
   }
 </script>
 
@@ -139,25 +161,41 @@
   {/each}
 </div>
 <Modal showModal={showModal} on:exit={toggleModal}>
-  <div class="add-event-modal">
+  <h2>Add Event</h2>
+  <form class="add-event-modal" on:submit|preventDefault={addEvent}>
     <label>
       <span>Event Name: </span>
-      <input type="textbox" bind:value={addEventFields.name}>
+      <input type="textbox" bind:value={addEventFields.title}>
     </label>
     <label>
       <span>Start Time: </span>
-      <input type="textbox" bind:value={addEventFields.startTime}>
+      <input type="datetime-local" bind:value={addEventFields.startTime}>
     </label>
     <label>
       <span>End Time: </span>
-      <input type="textbox" bind:value={addEventFields.endTime}>
+      <input type="datetime-local" bind:value={addEventFields.endTime}>
     </label>
     <label>
       <span>Description: </span>
       <input type="textbox" bind:value={addEventFields.description}>
     </label>
-    <button on:click={addEvent}>Add Event</button>
-  </div>
+    <label>
+      <span>Group: </span>
+      <select type="number" bind:value={addEventFields.groupId}>
+        {#each $groupStore as group}
+          <option value={group.id}>{group.title}</option>
+        {/each}
+      </select>
+    </label>
+    {#if loading}
+      <p>Loading...</p>
+    {:else}
+      <button type="submit">Add Event</button>
+    {/if}
+    {#if addError}
+      <p class="error-text">{addError}</p>
+    {/if}
+  </form>
 </Modal>
 
 <style>
@@ -228,5 +266,8 @@
   .add-event-modal label {
     display: block;
     margin: 5px 0px;
+  }
+  .error-text {
+    color: red;
   }
 </style>

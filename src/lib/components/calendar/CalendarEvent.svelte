@@ -1,17 +1,14 @@
 <script>
   // Constants
   const ONE_MINUTE_PERCENT = 100 / (24 * 60) + "%";
-
   // Helper functions
   import { computeTimeDifference, computeMinutesSinceMidnight, changeTimeByMinutes } from "$lib/shared/dateHelper.js";
-  
   // Components
   import EventEditPopout from "./EventEditPopout.svelte";
-
   // Stores
-  import calendarStore from "$lib/stores/calendarStore.js";
+  import { page } from "$app/stores";
+  import groupStore from "$lib/stores/groupStore.js";
   import eventStore from "$lib/stores/eventStore.js";
-  
   // Properties
   export let event;
   export let pos;
@@ -33,7 +30,7 @@
     }
   }
 
-  $: calendar = $calendarStore.find(c => c.id === event.calendarId);
+  $: calendar = $groupStore.find(c => c.id === event.groupId);
 
   let showEventEditPopout = false;
 
@@ -85,16 +82,36 @@
 		window.addEventListener('mouseup', mouseUp)	
 	}
 	
-	function mouseUp() {
+	async function mouseUp() {
     document.body.style.cursor = resizeValues.initialCursor;
     
     if (!resizeValues.moved) showEventEditPopout = true;
+
+    let originalStart = resizeValues.startTime;
+    let originalEnd = resizeValues.endTime;
     
 		resizeValues = null;
 		
     // Unbind the movement functions
 		window.removeEventListener('mousemove', mouseMove)	
-		window.removeEventListener('mouseup', mouseUp)	
+		window.removeEventListener('mouseup', mouseUp)
+
+    if (event.startTime !== originalStart || event.endTime !== originalEnd) {
+      // Attempt to sync the event
+      const { error } = await $page.data.supabase
+        .from("events")
+        .update({
+          start_time: event.startTime,
+          duration: computeTimeDifference(event.startTime, event.endTime)
+        })
+        .eq("id", event.id)
+        .select().single();
+      if (error) {
+        console.log("Error updating event " + event.id + ": " + error.message);
+        event.startTime = originalStart;
+        event.endTime = originalEnd;
+      }
+    }
 	}
 
 	function mouseMove(e) {
@@ -141,7 +158,7 @@
             width: {blockSqueeze};
             background-color: {calendar.color};">
   <div class="details-container" style="width: {textSqueeze};">
-    <div>{event.name}</div>
+    <div>{event.title}</div>
     <div>{event.startTime} - {event.endTime}</div>
   </div>
 </div>

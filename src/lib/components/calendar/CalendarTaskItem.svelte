@@ -1,25 +1,44 @@
 <script>
   // Stores
+  import { page } from "$app/stores";
   import taskStore from "$lib/stores/taskStore.js";
-  import projectStore from "$lib/stores/projectStore.js";
+  import groupStore from "$lib/stores/groupStore.js";
 
   // Properties
   export let task;
 
-  $: project = $projectStore.find(p => p.id === task.projectId);
+  $: group = $groupStore.find(p => p.id === task.groupId);
 
-  const toggleCompletion = () => {
+  let toggleCompletionLoading = false;
+  const toggleCompletion = async () => {
+    if (toggleCompletionLoading) return;
+    toggleCompletionLoading = true;
+
     // Toggle the state of the checkbox
     task.complete = !task.complete;
     // Push the update to the store
     $taskStore = $taskStore;
+
+    const { error } = await $page.data.supabase
+      .from("tasks")
+      .update({
+        complete: task.complete
+      })
+      .eq('id', task.id);
+    
+    if (error) {
+      console.log("There was an error changing completion status for task " + task.id + ": " + error);
+      task.complete = !task.complete;
+    }
+    
+    toggleCompletionLoading = false;
   }
 </script>
 
-<div class="calendar-task-item" style="background-color: {project.color};">
+<div class="calendar-task-item" style="background-color: {group.color};">
   <label>
     <input type="checkbox" checked={task.complete} on:change={toggleCompletion}>
-    <span>{task.name}</span>
+    <span>{task.title}</span>
   </label>
 </div>
 

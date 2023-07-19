@@ -6,10 +6,10 @@ CREATE TABLE "users" (
 
 CREATE TABLE "groups" (
   "id" bigserial PRIMARY KEY,
-  "user_id" uuid NOT NULL REFERENCES "users" ON DELETE CASCADE,
+  "user_id" uuid NOT NULL DEFAULT (auth.uid()) REFERENCES "users" ON DELETE CASCADE,
   "title" varchar(30),
-  "color" char(6) NOT NULL,
-  "show" boolean NOT NULL DEFAULT (FALSE),
+  "color" varchar(6) NOT NULL,
+  "show" boolean NOT NULL DEFAULT (TRUE),
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE "events" (
   "group_id" bigint NOT NULL REFERENCES "groups" ON DELETE CASCADE,
   "title" varchar(40),
   "start_time" timestamp(0) NOT NULL,
-  "duration" integer NOT NULL,
+  "duration" integer NOT NULL CHECK ("duration" >= 30),
   "description" text,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
@@ -37,9 +37,9 @@ CREATE TABLE "tasks" (
 
 CREATE TABLE "habits" (
   "id" bigserial PRIMARY KEY,
-  "user_id" uuid NOT NULL REFERENCES "users" ON DELETE CASCADE,
+  "user_id" uuid NOT NULL DEFAULT (auth.uid()) REFERENCES "users" ON DELETE CASCADE,
   "title" varchar(40),
-  "color" char(6) NOT NULL,
+  "color" varchar(6) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
