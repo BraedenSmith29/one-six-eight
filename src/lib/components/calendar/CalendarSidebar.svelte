@@ -29,7 +29,6 @@
       .insert({
         title: addGroupFields.title,
         color: addGroupFields.color.substring(1),
-        show: true,
       })
       .select().single();
 

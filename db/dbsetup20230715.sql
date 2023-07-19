@@ -9,7 +9,7 @@ CREATE TABLE "groups" (
   "user_id" uuid NOT NULL DEFAULT (auth.uid()) REFERENCES "users" ON DELETE CASCADE,
   "title" varchar(30),
   "color" varchar(6) NOT NULL,
-  "show" boolean NOT NULL DEFAULT (FALSE),
+  "show" boolean NOT NULL DEFAULT (TRUE),
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
