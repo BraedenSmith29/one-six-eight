@@ -1,5 +1,6 @@
 <script>
   // Components
+  import Sidebar from "./Sidebar.svelte";
   import TaskListItem from "$lib/components/tasks/TaskListItem.svelte";
   import Modal from "$lib/components/shared/Modal.svelte";
   // Stores
@@ -64,14 +65,19 @@
 </script>
 
 <svelte:head><title>Tasks: One Six Eight</title></svelte:head>
-<div class="content">
-  {#each incompleteTasks as task}
-    <TaskListItem task={task} />
-  {/each}
-  <button class="add-task-button" on:click={toggleModal}>Add Task</button>
-  {#each completeTasks as task}
-    <TaskListItem task={task} />
-  {/each}
+<div class="task-view-wrapper">
+  <Sidebar />
+  <div class="task-view">
+    <div class="content">
+      {#each incompleteTasks as task}
+        <TaskListItem task={task} />
+      {/each}
+      <button class="add-task-button" on:click={toggleModal}>Add Task</button>
+      {#each completeTasks as task}
+        <TaskListItem task={task} />
+      {/each}
+    </div>
+  </div>
 </div>
 <Modal showModal={showModal} on:exit={toggleModal}>
   <form class="add-task-modal" on:submit={addTask}>
@@ -107,6 +113,10 @@
 </Modal>
 
 <style>
+  .task-view-wrapper {
+    display: flex;
+    height: calc(100vh - 72px);
+  }
   .content {
     display: flex;
     flex-direction: column;
@@ -114,6 +124,9 @@
     gap: 10px;
     width: 50%;
     margin: 10px auto;
+  }
+  .task-view {
+    flex: 1;
   }
   .add-task-button {
     width: 20%;
