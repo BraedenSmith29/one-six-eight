@@ -3,6 +3,7 @@
   import CalendarView from "$lib/components/calendar/CalendarView.svelte";
 </script>
 
+<svelte:head><title>Calendar: One Six Eight</title></svelte:head>
 <div class="calendar-view-wrapper">
   <CalendarSidebar />
   <div class="calendar-view">

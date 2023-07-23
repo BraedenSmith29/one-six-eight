@@ -34,6 +34,7 @@
   };
 </script>
 
+<svelte:head><title>Sign Up: One Six Eight</title></svelte:head>
 <div class="contents">
   <h1>Sign Up</h1>
   {#if complete}
