@@ -63,6 +63,7 @@
   }
 </script>
 
+<svelte:head><title>Tasks: One Six Eight</title></svelte:head>
 <div class="content">
   {#each incompleteTasks as task}
     <TaskListItem task={task} />

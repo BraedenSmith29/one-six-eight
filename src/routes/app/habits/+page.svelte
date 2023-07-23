@@ -51,6 +51,7 @@
   };
 </script>
 
+<svelte:head><title>Habits: One Six Eight</title></svelte:head>
 <div class="content">
   {#each $habitStore as habit}
     <HabitListItem habit={habit} />  

@@ -3,6 +3,7 @@
   import { page } from "$app/stores";
 </script>
 
+<svelte:head><title>One Six Eight</title></svelte:head>
 <div class="content">
   <h1>Welcome to One Six Eight</h1>
   <p>This is a temporary landing page for the website. To enter the web app, please select an option below.</p>

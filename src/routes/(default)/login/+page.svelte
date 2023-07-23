@@ -25,6 +25,7 @@
   };
 </script>
 
+<svelte:head><title>Log In: One Six Eight</title></svelte:head>
 <div class="contents">
   <h1>Login</h1>
   <form on:submit|preventDefault={handleSignIn}>
