@@ -1,6 +1,6 @@
 <script>
-  import CalendarSidebar from "$lib/components/calendar/CalendarSidebar.svelte";
-  import CalendarView from "$lib/components/calendar/CalendarView.svelte";
+  import CalendarSidebar from "./CalendarSidebar.svelte";
+  import CalendarView from "./CalendarView.svelte";
 </script>
 
 <svelte:head><title>Calendar: One Six Eight</title></svelte:head>

@@ -1,7 +1,7 @@
 <script>
   // Components
   import Modal from "$lib/components/shared/Modal.svelte";
-  import CalendarSidebarGroupListItem from './CalendarSidebarGroupListItem.svelte';
+  import CalendarSidebarGroupListItem from '$lib/components/calendar/CalendarSidebarGroupListItem.svelte';
   // Stores
   import { page } from "$app/stores";
   import groupStore from "$lib/stores/groupStore.js";
