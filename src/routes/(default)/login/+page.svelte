@@ -41,7 +41,6 @@
 
 <style>
   .contents {
-    font-family: sans-serif;
     max-width: 400px;
     margin: 5% auto;
     text-align: center;

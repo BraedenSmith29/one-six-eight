@@ -32,7 +32,6 @@
   a {
     padding: 10px 20px;
     font-size: 18px;
-    font-family: sans-serif;
     background-color: #4CAF50;
     color: white;
     border: none;
