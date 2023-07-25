@@ -1,4 +1,9 @@
 <script>
+  // Constants
+  const TODAY = -3;
+  const UPCOMING = -2;
+  const HISTORY = -1;
+  const INBOX = 0;
   // Components
   import Sidebar from "./Sidebar.svelte";
   import TaskListItem from "$lib/components/tasks/TaskListItem.svelte";
@@ -7,6 +12,7 @@
   import { page } from "$app/stores";
   import taskStore from "$lib/stores/taskStore.js";
   import groupStore from "$lib/stores/groupStore.js";
+  import taskPageStore from "$lib/stores/taskPageStore.js";
 
   // Reactively define the subsets of tasks
   $: completeTasks = $taskStore.filter(task => task.complete === true);
@@ -68,15 +74,17 @@
 <div class="task-view-wrapper">
   <Sidebar />
   <div class="task-view">
-    <div class="content">
-      {#each incompleteTasks as task}
-        <TaskListItem task={task} />
-      {/each}
-      <button class="add-task-button" on:click={toggleModal}>Add Task</button>
-      {#each completeTasks as task}
-        <TaskListItem task={task} />
-      {/each}
-    </div>
+    {#if $taskPageStore.selectedView === UPCOMING}
+      <div class="content">
+        {#each incompleteTasks as task}
+          <TaskListItem task={task} />
+        {/each}
+        <button class="add-task-button" on:click={toggleModal}>Add Task</button>
+        {#each completeTasks as task}
+          <TaskListItem task={task} />
+        {/each}
+      </div>
+    {/if}
   </div>
 </div>
 <Modal showModal={showModal} on:exit={toggleModal}>
