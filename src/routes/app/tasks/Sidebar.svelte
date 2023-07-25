@@ -25,6 +25,7 @@
       <span>History</span>
     </div>
   </div>
+  <hr style="width: 100%; border-bottom: #eeeeee;">
   <div class="groups-section">
     <GroupListItem group={null} />
     {#if $groupStore.length > 0}
@@ -41,7 +42,7 @@
   .sidebar {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
     background-color: #212121;
     color: #eeeeee;
     padding: 10px;
@@ -56,7 +57,6 @@
   }
   .groups-section {
     flex-grow: 1;
-    margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
