@@ -1,9 +1,6 @@
 <script>
-  // Assets
-  import todayIcon from "$lib/assets/today-icon.svg";
-  import upcomingIcon from "$lib/assets/upcoming-icon.svg";
-  import historyIcon from "$lib/assets/history-icon.svg";
   // Components
+  import Icon from "$lib/components/shared/Icon.svelte";
   import AddGroupButton from "$lib/components/shared/AddGroupButton.svelte";
   import GroupListItem from "$lib/components/shared/GroupListItem.svelte";
   // Stores
@@ -13,15 +10,15 @@
 <div class="sidebar">
   <div class="time-section">
     <div class="task-view-option">
-      <img src={todayIcon} />
+      <Icon name="today" color="#eeeeee" />
       <span>Today</span>
     </div>
     <div class:selected={true} class="task-view-option">
-      <img src={upcomingIcon} />
+      <Icon name="upcoming" color="#eeeeee" />
       <span>Upcoming</span>
     </div>
     <div class="task-view-option">
-      <img src={historyIcon} />
+      <Icon name="history" color="#eeeeee" />
       <span>History</span>
     </div>
   </div>

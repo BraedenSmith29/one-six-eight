@@ -1,13 +1,12 @@
 <script>
-  // Assets
-  import inboxIcon from "$lib/assets/inbox-icon.svg";
-  import groupIcon from "$lib/assets/group-icon.svg";
+  // Components
+  import Icon from "$lib/components/shared/Icon.svelte";
   // Properties
   export let group;
 </script>
 
 <div class="group-list-item" on:click>
-  <img src={group == null ? inboxIcon : groupIcon} />
+  <Icon name={group == null ? "inbox" : "small-circle"} color="#eeeeee" />
   <span>{group == null ? "Inbox" : group.title}</span>
 </div>
 

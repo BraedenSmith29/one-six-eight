@@ -1,8 +1,7 @@
 <script>
-  // Assets
-  import addIcon from "$lib/assets/add-icon.svg";
   // Components
   import Modal from "$lib/components/shared/Modal.svelte";
+  import Icon from "$lib/components/shared/Icon.svelte";
   // Stores
   import { page } from "$app/stores";
 
@@ -51,7 +50,7 @@
 </script>
 
 <button class="add-new-group-button" on:click={toggleAddGroupModal}>
-  <img src={addIcon} />
+  <Icon name="plus-sign" color="#eeeeee" />
   <span>Add New Group</span>
 </button>
 <Modal showModal={showModal} on:exit={toggleAddGroupModal}>
