@@ -3,11 +3,9 @@
   import todayIcon from "$lib/assets/today-icon.svg";
   import upcomingIcon from "$lib/assets/upcoming-icon.svg";
   import historyIcon from "$lib/assets/history-icon.svg";
-  import inboxIcon from "$lib/assets/inbox-icon.svg";
-  import selectedGroupIcon from "$lib/assets/selected-group-icon.svg";
-  import unselectedGroupIcon from "$lib/assets/unselected-group-icon.svg";
   // Components
   import AddGroupButton from "$lib/components/shared/AddGroupButton.svelte";
+  import GroupListItem from "$lib/components/shared/GroupListItem.svelte";
   // Stores
   import groupStore from "$lib/stores/groupStore.js";
 </script>
@@ -28,17 +26,11 @@
     </div>
   </div>
   <div class="groups-section">
-    <div class="task-view-option">
-      <img src={inboxIcon} />
-      <span>Inbox</span>
-    </div> 
+    <GroupListItem group={null} />
     {#if $groupStore.length > 0}
       <span class="groups-heading">Groups</span>
       {#each $groupStore as group}
-        <div class="task-view-option">
-          <img src={selectedGroupIcon} />
-          <span>{group.title}</span>
-        </div>
+        <GroupListItem group={group} />
       {/each}
     {/if}
   </div>
