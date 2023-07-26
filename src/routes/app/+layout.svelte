@@ -28,7 +28,7 @@
   </div>
   <div class="header-group">
     <a href="/app/insights">Insights</a>
-    <button on:click={handleSignOut}>Sign out</button>
+    <button style="margin-left: 15px; margin-right: 30px;" on:click={handleSignOut}>Sign out</button>
     <img class="profile-picture" alt="Profile" src={profilePicture} />
   </div>
 </header>
@@ -39,24 +39,33 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 72px;
+    box-sizing: border-box;
+    overflow: hidden;
     padding: 10px;
-    background-color: #f5f5f5;
-    border-bottom: 2px solid grey;
+    background-color: #272727;
   }
   .header-group {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 10px;
   }
   header a {
     font-size: 1.25em;
+    color: #bbbbbb;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+  }
+  header a:hover {
+    color: #eeeeee;
+    background-color: #373737;
   }
   .site-title {
     font-size: 2em;
+    color: #bbbbbb;
     font-weight: bold;
-    border-right: 2px solid grey;
-    padding-left: 10px;
-    padding-right: 25px;
+    padding: 0px 10px;
   }
   .profile-picture {
     height: 50px;
