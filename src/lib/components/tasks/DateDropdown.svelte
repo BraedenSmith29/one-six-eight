@@ -46,6 +46,12 @@
     displayMonthDate = new Date(targetYear, targetMonthRemainder);
   }
 
+  function changeDate(newDate) {
+    dateValue = newDate;
+    displayMonthDate = new Date(+dateValue.substring(0, 4), +dateValue.substring(5, 7) - 1);
+    exitPopout();
+  }
+
   function openPopout() {
     window.addEventListener("mousedown", exitPopout);
     showDropdown = true;
@@ -72,7 +78,7 @@
           <div class="day">{day}</div>
         {/each}
         {#each calAry as day}
-          <div class="day" class:today={day.dateString === getCurrentDate()}>{day.displayNum}</div>
+          <div class="day" class:today={day.dateString === dateValue} on:click={() => changeDate(day.dateString)}>{day.displayNum}</div>
         {/each}
       </div>
     </div>
