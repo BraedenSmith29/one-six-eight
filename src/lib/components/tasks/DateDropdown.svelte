@@ -45,10 +45,19 @@
 
     displayMonthDate = new Date(targetYear, targetMonthRemainder);
   }
+
+  function openPopout() {
+    window.addEventListener("mousedown", exitPopout);
+    showDropdown = true;
+  }
+  function exitPopout() {
+    window.removeEventListener("mousedown", exitPopout);
+    showDropdown = false;
+  }
 </script>
 
-<div class="date-dropdown">
-  <h2 on:click={() => showDropdown = !showDropdown}>June 2023 v</h2>
+<div class="date-dropdown" on:mousedown|stopPropagation>
+  <h2 on:click={openPopout}>June 2023 v</h2>
   {#if showDropdown}
     <div class="dropdown">
       <div class="calendar-header">
