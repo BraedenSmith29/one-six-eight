@@ -49,21 +49,21 @@
   function changeDate(newDate) {
     dateValue = newDate;
     displayMonthDate = new Date(+dateValue.substring(0, 4), +dateValue.substring(5, 7) - 1);
-    exitPopout();
+    closePopout();
   }
 
   function openPopout() {
-    window.addEventListener("mousedown", exitPopout);
+    window.addEventListener("mousedown", closePopout);
     showDropdown = true;
   }
-  function exitPopout() {
-    window.removeEventListener("mousedown", exitPopout);
+  function closePopout() {
+    window.removeEventListener("mousedown", closePopout);
     showDropdown = false;
   }
 </script>
 
 <div class="date-dropdown" on:mousedown|stopPropagation>
-  <h2 on:click={openPopout}>June 2023 v</h2>
+  <h2 on:click={() => showDropdown ? closePopout() : openPopout()}>June 2023 v</h2>
   {#if showDropdown}
     <div class="dropdown">
       <div class="calendar-header">
@@ -88,6 +88,7 @@
 <style>
   .date-dropdown {
     position: relative;
+    user-select: none;
   }
   .dropdown {
     position: absolute;
@@ -95,7 +96,6 @@
     border-radius: 10px;
     top: 100%;
     padding: 15px;
-    user-select: none;
   }
   .calendar-header {
     display: flex;
