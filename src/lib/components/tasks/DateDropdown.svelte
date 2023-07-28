@@ -63,7 +63,7 @@
 </script>
 
 <div class="date-dropdown" on:mousedown|stopPropagation>
-  <h2 on:click={() => showDropdown ? closePopout() : openPopout()}>June 2023 v</h2>
+  <button class="dropdown-button" on:click={() => showDropdown ? closePopout() : openPopout()}>June 2023 v</button>
   {#if showDropdown}
     <div class="dropdown">
       <div class="calendar-header">
@@ -90,11 +90,18 @@
     position: relative;
     user-select: none;
   }
+  .dropdown-button {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: inherit;
+    background-color: inherit;
+    border: none;
+  }
   .dropdown {
     position: absolute;
     background-color: #2e2e2e;
     border-radius: 10px;
-    top: 100%;
+    top: calc(100% + 8px);
     padding: 15px;
   }
   .calendar-header {

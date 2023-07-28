@@ -32,5 +32,6 @@
   }
   .task-view {
     flex: 1;
+    padding-top: 30px;
   }
 </style>

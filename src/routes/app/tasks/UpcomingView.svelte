@@ -3,10 +3,10 @@
 </script>
 
 <div class="content">
-  <div style="position: relative;" class="list-header">
+  <div style="position: relative" class="list-header">
     <DateDropdown />
     <spacer style="flex-grow: 1" />
-    <p>Filters</p>
+    <div>Filters</div>
     <button>Today</button>
   </div>
   <hr style="width: 100%"/>
@@ -18,9 +18,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
     width: 50%;
-    margin: 10px auto;
+    margin: 0px auto;
     color: #eeeeee;
   }
   .list-header {
