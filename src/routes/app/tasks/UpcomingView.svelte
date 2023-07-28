@@ -1,6 +1,10 @@
+<script>
+  import DateDropdown from "$lib/components/tasks/DateDropdown.svelte";
+</script>
+
 <div class="content">
   <div style="position: relative;" class="list-header">
-    <h2>June 2023 v</h2>
+    <DateDropdown />
     <spacer style="flex-grow: 1" />
     <p>Filters</p>
     <button>Today</button>
