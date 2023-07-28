@@ -5,9 +5,10 @@
   import { getCurrentDate } from "$lib/shared/dateHelper.js";
   // Properties
   export let dateValue = getCurrentDate(); // Format YYYY-MM-DD
-
+  
   let showDropdown = false;
   let displayMonthDate = new Date(+dateValue.substring(0, 4), +dateValue.substring(5, 7) - 1);
+  let displayMonthName = displayMonthDate.toLocaleString("en-US", { month: "long"});
   $: displayYear = displayMonthDate.getFullYear();
   $: displayMonth = displayMonthDate.getMonth();
 
@@ -49,6 +50,7 @@
   function changeDate(newDate) {
     dateValue = newDate;
     displayMonthDate = new Date(+dateValue.substring(0, 4), +dateValue.substring(5, 7) - 1);
+    displayMonthName = displayMonthDate.toLocaleString("en-US", { month: "long"});
     closePopout();
   }
 
@@ -63,7 +65,10 @@
 </script>
 
 <div class="date-dropdown" on:mousedown|stopPropagation>
-  <button class="dropdown-button" on:click={() => showDropdown ? closePopout() : openPopout()}>June 2023 v</button>
+  <button class="dropdown-button" on:click={() => showDropdown ? closePopout() : openPopout()}>
+    <span>{displayMonthName} {displayYear}</span>
+    <span>v</span>
+  </button>
   {#if showDropdown}
     <div class="dropdown">
       <div class="calendar-header">
