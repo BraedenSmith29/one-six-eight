@@ -1,13 +1,18 @@
 <script>
+  // Helper Functions
+  import { getCurrentDate } from "$lib/shared/dateHelper.js";
+  // Components
   import DateDropdown from "$lib/components/tasks/DateDropdown.svelte";
+
+  let date = getCurrentDate();
 </script>
 
 <div class="content">
   <div style="position: relative" class="list-header">
-    <DateDropdown />
+    <DateDropdown bind:dateValue={date} />
     <spacer style="flex-grow: 1" />
     <div>Filters</div>
-    <button>Today</button>
+    <button on:click={() => date = getCurrentDate()}>Today</button>
   </div>
   <hr style="width: 100%"/>
 </div>
