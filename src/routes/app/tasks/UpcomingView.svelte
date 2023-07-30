@@ -3,7 +3,7 @@
   import { getCurrentDate } from "$lib/shared/dateHelper.js";
   // Components
   import DateDropdown from "$lib/components/tasks/DateDropdown.svelte";
-  import Icon from "$lib/components/shared/Icon.svelte";
+  import FilterDropdown from "$lib/components/tasks/FilterDropdown.svelte";
 
   let date = getCurrentDate();
 </script>
@@ -12,7 +12,7 @@
   <div style="position: relative" class="list-header">
     <DateDropdown bind:dateValue={date} />
     <spacer style="flex-grow: 1" />
-    <button style="padding-left: 4px"><Icon name="down-arrow" color="#eeeeee" height="0.9rem" width="0.9rem"/>Filters</button>
+    <FilterDropdown />
     <button on:click={() => date = getCurrentDate()}>Today</button>
   </div>
 </div>
