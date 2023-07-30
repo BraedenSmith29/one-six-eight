@@ -3,10 +3,13 @@
   const monthAbbrAry = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   // Helper functions
   import { getCurrentDate } from "$lib/shared/dateHelper.js";
+  import Icon from "../shared/Icon.svelte";
   // Properties
   export let dateValue = getCurrentDate(); // Format YYYY-MM-DD
   
   let showDropdown = false;
+  let iconColor = "#bbbbbb";
+
   let displayMonthDate = new Date(+dateValue.substring(0, 4), +dateValue.substring(5, 7) - 1);
   let displayMonthName = displayMonthDate.toLocaleString("en-US", { month: "long"});
   $: displayYear = displayMonthDate.getFullYear();
@@ -65,9 +68,11 @@
 </script>
 
 <div class="date-dropdown" on:mousedown|stopPropagation>
-  <button class="dropdown-button" on:click={() => showDropdown ? closePopout() : openPopout()}>
+  <button class="dropdown-button" on:click={() => showDropdown ? closePopout() : openPopout()} 
+                                  on:mouseenter={() => iconColor = "#eeeeee"}
+                                  on:mouseleave={() => iconColor = "#bbbbbb"}>
     <span>{displayMonthName} {displayYear}</span>
-    <span>v</span>
+    <Icon name="down-arrow" color={showDropdown ? "#bbbbbb" : iconColor} />
   </button>
   {#if showDropdown}
     <div class="dropdown">
@@ -96,11 +101,15 @@
     user-select: none;
   }
   .dropdown-button {
+    display: flex;
+    align-items: center;
+    gap: 3px;
     font-size: 1.5em;
     font-weight: bold;
     color: inherit;
     background-color: inherit;
     border: none;
+    cursor: pointer;
   }
   .dropdown {
     position: absolute;
