@@ -4,6 +4,7 @@
   import Icon from "$lib/components/shared/Icon.svelte";
   // Stores
   import { page } from "$app/stores";
+  import groupStore from "$lib/stores/groupStore.js";
 
   // Add functionality and form contents variable for modal
   let addGroupFields;
@@ -87,6 +88,9 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+  .add-group-modal {
+    background-color: #2e2e2e;
   }
   .add-group-modal label {
     display: block;
