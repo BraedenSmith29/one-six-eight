@@ -11,7 +11,7 @@
   let iconColor = "#bbbbbb";
 
   let displayMonthDate = new Date(+dateValue.substring(0, 4), +dateValue.substring(5, 7) - 1);
-  let displayMonthName = displayMonthDate.toLocaleString("en-US", { month: "long"});
+  $: displayMonthName = (new Date(+dateValue.substring(0, 4), +dateValue.substring(5, 7) - 1)).toLocaleString("en-US", { month: "long"});
   $: displayYear = displayMonthDate.getFullYear();
   $: displayMonth = displayMonthDate.getMonth();
 
