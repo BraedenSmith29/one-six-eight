@@ -3,6 +3,7 @@
   const monthAbbrAry = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   // Helper functions
   import { getCurrentDate } from "$lib/shared/dateHelper.js";
+  // Components
   import Icon from "$lib/components/shared/Icon.svelte";
   // Properties
   export let dateValue = getCurrentDate(); // Format YYYY-MM-DD
