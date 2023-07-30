@@ -9,7 +9,7 @@
 </script>
 
 <div class="content">
-  <div style="position: relative" class="list-header">
+  <div class="list-header">
     <DateDropdown bind:dateValue={date} />
     <spacer style="flex-grow: 1" />
     <FilterDropdown />
@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 50%;
+    width: 55%;
     margin: 0px auto;
     color: #eeeeee;
   }
@@ -30,9 +30,11 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 0px 5px 8px;
-    border-bottom: 2px solid #eeeeee;
-    margin-bottom: 8px;
+    position: sticky;
+    top: 0;
+    padding: 30px 5px 8px;
+    background-color: #1b1b1b;
+    border-bottom: 1px solid #777777;
   }
   .list-header button {
     display: flex;
