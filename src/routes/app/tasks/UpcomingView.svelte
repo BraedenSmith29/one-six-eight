@@ -1,9 +1,10 @@
 <script>
   // Helper Functions
-  import { getCurrentDate } from "$lib/shared/dateHelper.js";
+  import { getCurrentDate, getArrayOfDays } from "$lib/shared/dateHelper.js";
   // Components
   import DateDropdown from "$lib/components/tasks/DateDropdown.svelte";
   import FilterDropdown from "$lib/components/tasks/FilterDropdown.svelte";
+  import TaskDaySection from "$lib/components/tasks/TaskDaySection.svelte";
 
   let date = getCurrentDate();
 </script>
@@ -15,6 +16,9 @@
     <FilterDropdown />
     <button on:click={() => date = getCurrentDate()}>Today</button>
   </div>
+  {#each getArrayOfDays(20) as day}
+    <TaskDaySection day={day} />
+  {/each}
 </div>
 
 <style>
