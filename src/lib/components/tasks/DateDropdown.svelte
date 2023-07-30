@@ -80,13 +80,12 @@
         <div class="calendar-label">{monthAbbrAry[displayMonth]} {displayYear}</div>
         <spacer style="flex-grow: 1" />
         <button class="month-select-button" on:click={() => changeMonth(-1)}>
-          <Icon name="left-arrow" color="#eeeeee" height="1rem" width="1rem" />
+          <Icon name="left-arrow" color="#eeeeee" />
         </button>
         <button class="month-select-button" on:click={() => changeMonth(1)}>
-          <Icon name="right-arrow" color="#eeeeee" height="1rem" width="1rem" />
+          <Icon name="right-arrow" color="#eeeeee" />
         </button>
       </div>
-      <hr />
       <div class="calendar">
         {#each ["S", "M", "T", "W", "T", "F", "S"] as day}
           <div class="day">{day}</div>
@@ -126,7 +125,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 3px;
+    padding: 0px 3px 9px;
+    border-bottom: solid 1px #eeeeee;
+    margin-bottom: 10px;
   }
   .month-select-button {
     display: flex;
@@ -134,7 +135,11 @@
     padding: 0px;
     background-color: inherit;
     border: none;
+    border-radius: 12px;
     cursor: pointer;
+  }
+  .month-select-button:hover {
+    background-color: #474747;
   }
   .calendar-label {
     font-size: 1.1em;
