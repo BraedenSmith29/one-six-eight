@@ -68,15 +68,15 @@
   }
 </script>
 
-<div class="date-dropdown" on:mousedown|stopPropagation>
-  <button class="dropdown-button" on:click={() => showDropdown ? closePopout() : openPopout()} 
+<div class="date-dropdown">
+  <button class="dropdown-button" on:click={openPopout} 
                                   on:mouseenter={() => iconColor = "#eeeeee"}
                                   on:mouseleave={() => iconColor = "#bbbbbb"}>
     <span>{displayMonthName} {displayYear}</span>
     <Icon name="down-arrow" color={showDropdown ? "#bbbbbb" : iconColor} />
   </button>
   {#if showDropdown}
-    <div class="dropdown">
+    <div class="dropdown" on:mousedown|stopPropagation>
       <div class="calendar-header">
         <div class="calendar-label">{monthAbbrAry[displayMonth]} {displayYear}</div>
         <spacer style="flex-grow: 1" />

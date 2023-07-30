@@ -14,13 +14,13 @@
   }
 </script>
 
-<div class="filter-dropdown" on:mousedown|stopPropagation>
-  <button class="dropdown-button" on:click={() => showDropdown ? closePopout() : openPopout()}>
+<div class="filter-dropdown">
+  <button class="dropdown-button" on:click={openPopout}>
     <Icon name="down-arrow" color="#eeeeee" height="0.9rem" width="0.9rem"/>
     <span>Filters</span>
   </button>
   {#if showDropdown}
-    <div class="dropdown">
+    <div class="dropdown" on:mousedown|stopPropagation>
       
     </div>
   {/if}
