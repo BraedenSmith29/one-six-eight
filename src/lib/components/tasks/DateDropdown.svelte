@@ -3,7 +3,7 @@
   const monthAbbrAry = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   // Helper functions
   import { getCurrentDate } from "$lib/shared/dateHelper.js";
-  import Icon from "../shared/Icon.svelte";
+  import Icon from "$lib/components/shared/Icon.svelte";
   // Properties
   export let dateValue = getCurrentDate(); // Format YYYY-MM-DD
   
@@ -79,8 +79,12 @@
       <div class="calendar-header">
         <div class="calendar-label">{monthAbbrAry[displayMonth]} {displayYear}</div>
         <spacer style="flex-grow: 1" />
-        <button on:click={() => changeMonth(-1)}>&lt</button>
-        <button on:click={() => changeMonth(1)}>&gt</button>
+        <button class="month-select-button" on:click={() => changeMonth(-1)}>
+          <Icon name="left-arrow" color="#eeeeee" height="1rem" width="1rem" />
+        </button>
+        <button class="month-select-button" on:click={() => changeMonth(1)}>
+          <Icon name="right-arrow" color="#eeeeee" height="1rem" width="1rem" />
+        </button>
       </div>
       <hr />
       <div class="calendar">
@@ -121,7 +125,16 @@
   .calendar-header {
     display: flex;
     align-items: center;
+    gap: 10px;
     padding: 3px;
+  }
+  .month-select-button {
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
   }
   .calendar-label {
     font-size: 1.1em;
