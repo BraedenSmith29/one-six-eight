@@ -108,6 +108,7 @@
     display: flex;
     align-items: center;
     gap: 3px;
+    padding: 1px 0px;
     font-size: 1.5em;
     font-weight: bold;
     color: inherit;
