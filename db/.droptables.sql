@@ -1,0 +1,6 @@
+DROP TABLE "tasks" CASCADE;
+DROP TABLE "events" CASCADE;
+DROP TABLE "habit_history" CASCADE;
+DROP TABLE "groups" CASCADE;
+DROP TABLE "habits" CASCADE;
+DROP TABLE "users" CASCADE;
